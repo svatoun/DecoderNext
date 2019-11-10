@@ -1,0 +1,9 @@
+*.class
+/build/
+/nbproject/private/
+/dist/
+
+/*/build/
+/*/dist/
+/*/release/
+/*/nbproject/private/

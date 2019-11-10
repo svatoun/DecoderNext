@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<programmer-layout>
+    <categories>
+        <match>
+            <family name="Zimo Unified software (version 37+)" mfg="Zimo"/>
+            <model model="MX618N18 version 37+" productID="243">
+        </match>
+
+        <category id="General" 
+                  iconBase="one/dedic/jmri/decoderpro/resources/category-general.png"
+                  label="General">
+            <pane id="RosterEntry"/>
+            <pane id="Basic"/>
+            <pane id="Basic Speed Control"/>
+            <pane id="RailCom"/>
+            <pane id="Decoder Lock"/>
+        </category>
+        
+        <category id="Movement">
+            <pane id="Motor"/>
+            <pane id="Speed Table"/>
+            <pane id="Braking"/>
+            <pane id="Speed Regulation"/>
+            <pane id="Accel/Decel"/>
+        </category>
+        
+        <category id="Functions">
+            <pane id="Function Map"/>
+            <pane id="Lights"/>
+            <pane id="Analog Controls"/>
+            <pane id="Alt Function Map"/>
+            <pane id="Swiss Mapping V36+"/>
+        </category>
+        
+        <category id="Special">
+            <pane id="Consist"/>
+            <pane id="Shunt/Uncouple"/>
+            <pane id="Smoke"/>
+        </category>
+        
+        <category id="Advanced">
+            <pane id="Advanced"/>
+            <pane id="Function Output"/>
+            <pane id="Servos"/>
+        </category>
+        
+        <category id="VendorZimo">
+            <pane id="Zimo Specific"/>
+            <pane id="Load Code"/>
+        </category>
+
+    </categories>
+</programmer-layout>

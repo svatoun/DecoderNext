@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: one.dedic.jmri.lib.jgoodies.validation
+OpenIDE-Module-Localizing-Bundle: one/dedic/jmri/lib/jgoodies/validation/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

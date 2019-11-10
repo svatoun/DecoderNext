@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: one.dedic.decodernext.libjmri
+OpenIDE-Module-Localizing-Bundle: one/dedic/decodernext/libjmri/Bundle.properties
+OpenIDE-Module-Specification-Version: 4.17
+

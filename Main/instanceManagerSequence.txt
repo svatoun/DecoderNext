@@ -1,0 +1,52 @@
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: class jmri.jmrix.SystemConnectionMemoManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization A: class jmri.jmrix.SystemConnectionMemoManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: interface jmri.ShutDownManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization I: interface jmri.ShutDownManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: class jmri.jmrit.revhistory.FileHistory
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization A: class jmri.jmrit.revhistory.FileHistory
+[AWT-EventQueue-0]       |  Start initialization: interface jmri.UserPreferencesManager
+[AWT-EventQueue-0]       |  End initialization I: interface jmri.UserPreferencesManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: class jmri.configurexml.ClassMigrationManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization A: class jmri.configurexml.ClassMigrationManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: class apps.startup.StartupActionModelUtil
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization (no object) E: class apps.startup.StartupActionModelUtil
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: class jmri.TurnoutOperationManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization A: class jmri.TurnoutOperationManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: interface jmri.SensorManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: class jmri.jmrix.internal.InternalSystemConnectionMemo
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization A: class jmri.jmrix.internal.InternalSystemConnectionMemo
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization I: interface jmri.SensorManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: interface jmri.TurnoutManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization I: interface jmri.TurnoutManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: interface jmri.LightManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization I: interface jmri.LightManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: class jmri.web.server.WebServerPreferences
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization I: class jmri.web.server.WebServerPreferences
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: class jmri.web.server.WebServer
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization (no object) E: class jmri.web.server.WebServer
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: class jmri.implementation.SignalSpeedMap
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization A: class jmri.implementation.SignalSpeedMap
+[one.dedic.jmri.bridges.AppsBaseBridge]|  Start initialization: interface jmri.LogixManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: interface jmri.MemoryManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization I: interface jmri.MemoryManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: interface jmri.SignalHeadManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization I: interface jmri.SignalHeadManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: interface jmri.SignalMastManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization I: interface jmri.SignalMastManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: class jmri.BlockManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|      Start initialization: interface jmri.ReporterManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|      End initialization I: interface jmri.ReporterManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization A: class jmri.BlockManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: interface jmri.ConditionalManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization I: interface jmri.ConditionalManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: class jmri.jmrit.logix.WarrantManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization A: class jmri.jmrit.logix.WarrantManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: class jmri.jmrit.logix.OBlockManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization A: class jmri.jmrit.logix.OBlockManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    Start initialization: class jmri.jmrit.entryexit.EntryExitPairs
+[one.dedic.jmri.bridges.AppsBaseBridge]|      Start initialization: interface jmri.SignalMastLogicManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|        Start initialization: class jmri.jmrit.display.layoutEditor.LayoutBlockManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|        End initialization A: class jmri.jmrit.display.layoutEditor.LayoutBlockManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|      End initialization I: interface jmri.SignalMastLogicManager
+[one.dedic.jmri.bridges.AppsBaseBridge]|    End initialization A: class jmri.jmrit.entryexit.EntryExitPairs
+[one.dedic.jmri.bridges.AppsBaseBridge]|  End initialization I: interface jmri.LogixManager

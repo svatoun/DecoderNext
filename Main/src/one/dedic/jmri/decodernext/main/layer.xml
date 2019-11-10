@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Loaders">
+        
+    </folder>
+    <folder name="Services">
+        <file name="one-dedic-jmri-bridges-JmriServicesBridge.instance">
+            <attr name="instanceOf" stringvalue="org.openide.util.Lookup"/>
+            <attr name="instanceCreate" methodvalue="one.dedic.jmri.bridges.JmriServicesBridge.getServiceLookup"/>
+        </file>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Modes">
+            <file name="documentation.wsmode" url="documentationWsmode.xml"/>
+            <file name="listings.wsmode" url="listingsWsmode.xml"/>
+        </folder>
+    </folder>
+</filesystem>
