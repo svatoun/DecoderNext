@@ -31,10 +31,6 @@ public class NetBeansShutdownManager extends DefaultShutDownManager {
         return true;
     }
     
-    @Override
-    protected void shutdownGUI() {
-        System.err.println("in shutdownGUI");
-    }
     
     public void netbeansShutdown() {
         try {

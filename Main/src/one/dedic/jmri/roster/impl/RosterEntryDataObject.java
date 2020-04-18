@@ -5,13 +5,21 @@
  */
 package one.dedic.jmri.roster.impl;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import jmri.jmrit.roster.Roster;
 import jmri.jmrit.roster.RosterEntry;
 import one.dedic.jmri.bridges.AppsBaseBridge;
 import org.netbeans.api.actions.Closable;
 import org.netbeans.api.actions.Openable;
+import org.netbeans.spi.actions.AbstractSavable;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
@@ -20,6 +28,7 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.loaders.OpenSupport;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
@@ -28,8 +37,8 @@ import org.openide.util.*;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
+import org.openide.windows.CloneableTopComponent;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  *
@@ -52,6 +61,13 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
     private TN      tempNode;
     private transient Roster  roster;
     private transient RosterEntry entry;
+    private transient RosterEntry originalEntry;
+
+    /**
+     * Listens on entry, makes the document dirty.
+     */
+    private transient PropertyChangeListener entryL;
+    private transient RosterL entryDelegate;
     
     public RosterEntryDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException {
         super(fo, loader);
@@ -78,6 +94,7 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
 //            }
 //        });
 //        
+        lookupContent.add(new OSupport(getPrimaryEntry()));
         lkp = new ProxyLookup(new AbstractLookup(lookupContent), super.getLookup());
         
         AppsBaseBridge.getInstance().whenReady(this::connect, false);
@@ -90,8 +107,8 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
         RosterEntry e = createRosterEntry();
         synchronized (this) {
             tn = tempNode;
-            entry = e;
         }
+        // signalize that the object has been initialized
         lookupContent.add(e);
         if (tn != null) {
             Node n = RosterEntryNode.create(roster, entry);
@@ -117,8 +134,6 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
             return RosterEntryNode.create(r, entry);
         }
     }
-    
-    
 
     @Override
     protected int associateLookup() {
@@ -201,10 +216,37 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
             if (entry != null) {
                 return entry;
             }
-            entry = found;
+            originalEntry = found;
+            if (entryL != null) {
+                if (entry != null) {
+                    entry.removePropertyChangeListener(entryL);
+                }
+                if (entryDelegate != null) {
+                    lookupContent.remove(entryDelegate);
+                }
+            }
+            entry = new RosterEntry(found, found.getId());
+            if (entry != null) {
+                entryDelegate = new RosterL();
+                lookupContent.add(entryDelegate);
+                entryL = WeakListeners.propertyChange(entryDelegate, found);
+                entry.addPropertyChangeListener(entryL);
+            }
         }
         lookupContent.add(found);
         return found;
+    }
+    
+    private class OSupport extends OpenSupport implements Openable, Closable {
+        
+        public OSupport(Entry entry) {
+            super(entry);
+        }
+
+        @Override
+        protected CloneableTopComponent createCloneableTopComponent() {
+            return new DecoderTopComponent(entry.getFile(), RosterEntryDataObject.this.entry);
+        }
     }
 
     @Override
@@ -230,6 +272,73 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
         
         public void replace(Node n) {
             super.changeOriginal(n, false);
+        }
+    }
+    
+    @NbBundle.Messages({
+        "# {0} - entry display name",
+        "TITLE_RosterEntry=Roster: {0}"
+    })
+    class RosterL extends AbstractSavable implements PropertyChangeListener {
+       @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            RosterEntry current = getLookup().lookup(RosterEntry.class);
+            if (evt.getSource() != current) {
+                return;
+            }
+            setModified(true);
+            this.register();
+        }
+
+        @Override
+        protected String findDisplayName() {
+            return Bundle.TITLE_RosterEntry(entry.getDisplayName());
+        }
+
+        @Override
+        protected void handleSave() throws IOException {
+            entry.updateFile();
+            updateRosterEntry(originalEntry, entry);
+            setModified(false);
+        }
+        
+        private RosterEntryDataObject dobj() {
+            return RosterEntryDataObject.this;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof RosterL)) {
+                return false;
+            }
+            RosterL other = (RosterL)obj;
+            return other.dobj() == dobj();
+        }
+
+        @Override
+        public int hashCode() {
+            return RosterEntryDataObject.this.hashCode();
+        }
+    }
+    
+    private void updateRosterEntry(RosterEntry original, RosterEntry e) throws IOException {
+        BeanInfo info;
+        try {
+            info = Introspector.getBeanInfo(original.getClass(), Introspector.USE_ALL_BEANINFO);
+        } catch (IntrospectionException ex) {
+            throw new IOException(ex);
+        }
+        
+        for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+            Method rM = pd.getReadMethod();
+            Method wrM = pd.getWriteMethod();
+            
+            try {
+                Object val = rM.invoke(e);
+                wrM.invoke(original, val);
+            } catch (ReflectiveOperationException ex) {
+                throw new IOException(ex);
+            }
         }
     }
 }

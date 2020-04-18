@@ -8,6 +8,7 @@ package one.dedic.jmri.decodernext.ui;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
+import one.dedic.jmri.decodernext.validation.ValidatorService;
 import org.openide.nodes.Node;
 
 /**
@@ -41,7 +42,7 @@ public interface Section {
     /**
      * Returns the validation support, if supports validation.
      */
-    public ValidatingUI getValidation();
+    public ValidatorService getValidation();
     
     // chane listener will receive 'activated
     public void addChangeListener(ChangeListener l);

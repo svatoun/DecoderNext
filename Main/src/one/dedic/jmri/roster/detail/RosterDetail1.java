@@ -21,18 +21,12 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import jmri.jmrit.roster.Roster;
 import jmri.jmrit.roster.RosterEntry;
-import one.dedic.jmri.decodernext.validation.support.PanelValidationSupport;
-import one.dedic.jmri.decodernext.validation.data.RequiredValidator;
-import one.dedic.jmri.decodernext.validation.data.RosterPropertyValidator;
-import one.dedic.jmri.decodernext.validation.data.TextValue;
-import one.dedic.jmri.decodernext.validation.data.ValidatorBuilder;
-import one.dedic.jmri.decodernext.validation.ValidatorService;
 
 /**
  *
  * @author sdedic
  */
-public class RosterDetail extends javax.swing.JPanel {
+public class RosterDetail1 extends javax.swing.JPanel {
     private final EntryModel model;
     private final RosterEntry entry;
     private Roster roster;
@@ -45,12 +39,10 @@ public class RosterDetail extends javax.swing.JPanel {
     
     private List<Component>   focusOrder = new ArrayList<>();
     
-    private final PanelValidationSupport validationSupport = new PanelValidationSupport(this);
-    
     /**
      * Creates new form RosterDetail
      */
-    public RosterDetail(EntryModel model) {
+    public RosterDetail1(EntryModel model) {
         this.model = model;
         this.entry = model.getEntry();
         initComponents();
@@ -74,41 +66,6 @@ public class RosterDetail extends javax.swing.JPanel {
         
         setFocusTraversalPolicyProvider(true);
         setFocusTraversalPolicy(new ExplicitLayoutFocusPolicy(this, focusOrder));
-        
-        ValidatorBuilder.forComponent(decoderModel).
-                key("rosterEntry.id").
-                value(new TextValue()).
-                validate(
-                        new RequiredValidator(),
-                        new RosterPropertyValidator(RosterEntry::getId).
-                                ignoreCase().
-                                requireUnique()
-                ).build();
-        ValidatorBuilder.forComponent(roadName).
-                key("rosterEntry.roadName").
-                value(new TextValue()).
-                validate(
-                        new RosterPropertyValidator(RosterEntry::getRoadName)
-                ).build();
-        ValidatorBuilder.forComponent(roadNumber).
-                key("rosterEntry.roadNumber").
-                value(new TextValue()).
-                validate(
-                        new RosterPropertyValidator(RosterEntry::getRoadNumber).
-                            warnDuplicate()
-                ).build();
-        ValidatorBuilder.forComponent(manufacturer).
-                key("rosterEntry.manufacturer").
-                value(new TextValue()).
-                validate(
-                        new RosterPropertyValidator(RosterEntry::getMfg)
-                ).build();
-        ValidatorBuilder.forComponent(manufacturer).
-                key("rosterEntry.type").
-                value(new TextValue()).
-                validate(
-                        new RosterPropertyValidator(RosterEntry::getModel)
-                ).build();
     }
     
     public void setRoster(Roster roster) {
@@ -154,22 +111,6 @@ public class RosterDetail extends javax.swing.JPanel {
         return m;
     }
 
-    @Override
-    public void removeNotify() {
-        validationSupport.removeNotify();
-        super.removeNotify();
-    }
-
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        validationSupport.addNotify();
-    }
-    
-    public ValidatorService getValidatorService() {
-        return validationSupport;
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -212,73 +153,73 @@ public class RosterDetail extends javax.swing.JPanel {
         notes = new javax.swing.JTextArea();
 
         lModelCaption.setFont(lModelCaption.getFont().deriveFont((lModelCaption.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD));
-        org.openide.awt.Mnemonics.setLocalizedText(lModelCaption, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lModelCaption.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lModelCaption, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lModelCaption.text_3")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lID, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lID.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lID, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lID.text_3_1")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lRoadName, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lRoadName.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lRoadName, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lRoadName.text_3_1")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lRoadNumber, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lRoadNumber.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lRoadNumber, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lRoadNumber.text_3_1")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lDescription, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lDescription.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lDescription, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lDescription.text_3_1")); // NOI18N
 
-        id.setText(org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.id.text_3")); // NOI18N
+        id.setText(org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.id.text_3_1")); // NOI18N
 
         roadName.setEditable(true);
 
         roadNumber.setEditable(true);
 
         stID.setLabelFor(id);
-        org.openide.awt.Mnemonics.setLocalizedText(stID, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stID.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(stID, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.stID.text_3_1")); // NOI18N
 
         stRoadName.setLabelFor(id);
-        org.openide.awt.Mnemonics.setLocalizedText(stRoadName, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stRoadName.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(stRoadName, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.stRoadName.text")); // NOI18N
 
         stRoadNumber.setLabelFor(roadNumber);
-        org.openide.awt.Mnemonics.setLocalizedText(stRoadNumber, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stRoadNumber.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(stRoadNumber, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.stRoadNumber.text_3_1")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lManufacturer, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lManufacturer.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lManufacturer, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lManufacturer.text_3_1")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lType, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lType.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lType, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lType.text_3_1")); // NOI18N
 
         manufacturer.setEditable(true);
 
         type.setEditable(true);
 
         stManufacturer.setLabelFor(roadNumber);
-        org.openide.awt.Mnemonics.setLocalizedText(stManufacturer, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stManufacturer.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(stManufacturer, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.stManufacturer.text")); // NOI18N
 
         stModelType.setLabelFor(roadNumber);
-        org.openide.awt.Mnemonics.setLocalizedText(stModelType, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stModelType.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(stModelType, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.stModelType.text")); // NOI18N
 
         description.setColumns(20);
         description.setLineWrap(true);
         description.setRows(5);
         descriptionScroll.setViewportView(description);
 
-        org.openide.awt.Mnemonics.setLocalizedText(lOwner, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lOwner.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lOwner, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lOwner.text_3_1")); // NOI18N
 
         owner.setEditable(true);
 
         stOwner.setLabelFor(owner);
-        org.openide.awt.Mnemonics.setLocalizedText(stOwner, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stOwner.text_2")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(stOwner, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.stOwner.text_2_1")); // NOI18N
 
         lDecoderCaption.setFont(lDecoderCaption.getFont().deriveFont((lDecoderCaption.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD));
-        org.openide.awt.Mnemonics.setLocalizedText(lDecoderCaption, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lDecoderCaption.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lDecoderCaption, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lDecoderCaption.text_3")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lFamily, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lFamily.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lFamily, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lFamily.text_3_1")); // NOI18N
 
         decoderFamily.setEditable(false);
         decoderFamily.setBackground(getBackground());
-        decoderFamily.setText(org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.decoderFamily.text_3")); // NOI18N
+        decoderFamily.setText(org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.decoderFamily.text_3_1")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lModel, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lModel.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lModel, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lModel.text_3_1")); // NOI18N
 
         decoderModel.setEditable(false);
         decoderModel.setBackground(getBackground());
-        decoderModel.setText(org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.decoderModel.text_3")); // NOI18N
+        decoderModel.setText(org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.decoderModel.text_3_1")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lNotes, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lNotes.text_3")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lNotes, org.openide.util.NbBundle.getMessage(RosterDetail1.class, "RosterDetail1.lNotes.text_3_1")); // NOI18N
 
         notes.setColumns(20);
         notes.setRows(5);
@@ -295,18 +236,15 @@ public class RosterDetail extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lRoadNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lRoadName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lFamily, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lOwner)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(lNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lNotes)
+                                    .addComponent(lFamily)
+                                    .addComponent(lOwner)
+                                    .addComponent(lDescription)
+                                    .addComponent(lRoadName)
+                                    .addComponent(lRoadNumber)
+                                    .addComponent(lID))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(descriptionScroll)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(owner, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -321,20 +259,24 @@ public class RosterDetail extends javax.swing.JPanel {
                                             .addComponent(stRoadName)
                                             .addComponent(stID))
                                         .addGap(50, 50, 50)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(lManufacturer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lModel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lModel)
+                                            .addComponent(lType)
+                                            .addComponent(lManufacturer))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(decoderModel)
                                             .addComponent(type, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(manufacturer, 0, 200, Short.MAX_VALUE)))
-                                    .addComponent(notesScroll))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(stManufacturer)
-                                    .addComponent(stModelType)))
+                                            .addComponent(manufacturer, 0, 200, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(stManufacturer)
+                                            .addComponent(stModelType)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(notesScroll, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(descriptionScroll))
+                                        .addGap(24, 24, 24))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lDecoderCaption)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -342,7 +284,7 @@ public class RosterDetail extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(lModelCaption)))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {decoderFamily, id, owner, roadName, roadNumber});

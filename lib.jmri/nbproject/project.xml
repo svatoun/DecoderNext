@@ -19,8 +19,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.51.1</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.2</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -28,11 +28,11 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.19.1</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.2</specification-version>
                     </run-dependency>
                 </dependency>
-                -->
+                    -->
                 <dependency>
                     <code-name-base>org.netbeans.libs.xerces</code-name-base>
                     <build-prerequisite/>
@@ -749,11 +749,18 @@
                 <package>org.apache.log4j</package>                
                 
                 <package>javax.annotation</package>
+                
+                <package>edu.umd.cs.findbugs.annotations</package>
+                
+                <package>com.sun.jna</package>
+                <package>com.sun.jna.platform</package>
             </public-packages>
+            <!--
             <class-path-extension>
                 <runtime-relative-path>ext/jmri.jar</runtime-relative-path>
                 <binary-origin>${jmri.jar.location}</binary-origin>
             </class-path-extension>
+            -->
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/jmri.jar</runtime-relative-path>
             </class-path-extension>
@@ -766,7 +773,7 @@
             </class-path-extension>
             <!-- maybe use java module - byte buddy 1.7.9 ? -->
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/byte-buddy-1.7.10.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/byte-buddy-1.10.5.jar</runtime-relative-path>
             </class-path-extension>
             <!-- maybe use java module - cglib 2.2.0 ? -->
             <class-path-extension>
@@ -789,16 +796,13 @@
                 <runtime-relative-path>../jmri/lib/hid4java-0.5.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jackson-annotations-2.9.8.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jackson-annotations-2.10.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jackson-core-2.9.8.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jackson-core-2.10.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jackson-databind-2.9.8.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>../jmri/lib/javacsv.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jackson-databind-2.10.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/javax.servlet-api-3.1.0.jar</runtime-relative-path>
@@ -807,34 +811,31 @@
                 <runtime-relative-path>../jmri/lib/jcip-annotations-1.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jdom-2.0.5.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jdom2-2.0.6.jar</runtime-relative-path>
+            </class-path-extension>
+           <class-path-extension>
+                <runtime-relative-path>../jmri/lib/jetty-client-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jdom.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jetty-http-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jetty-client-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jetty-io-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jetty-http-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jetty-security-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jetty-io-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jetty-server-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jetty-security-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jetty-servlet-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jetty-server-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jetty-util-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jetty-servlet-9.4.7.v20170914.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jetty-util-9.4.7.v20170914.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jetty-xml-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jetty-xml-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/jhall.jar</runtime-relative-path>
@@ -846,7 +847,7 @@
                 <runtime-relative-path>../jmri/lib/jinput.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jinputvalidator-0.6.0.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jinputvalidator-0.8.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/jlfgr-1_0.jar</runtime-relative-path>
@@ -858,7 +859,7 @@
                 <runtime-relative-path>../jmri/lib/joal.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/json-schema-validator-1.0.10.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/json-schema-validator-1.0.28.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/jsplitbutton-1.3.1.jar</runtime-relative-path>
@@ -871,28 +872,26 @@
                 <runtime-relative-path>../jmri/lib/jul-to-slf4j-1.7.25.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jython-standalone-2.7.0.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/jython-standalone-2.7.1.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/libusb4java-1.2.0-linux-arm.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/libusb4java-1.3.0-linux-arm.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/libusb4java-1.2.0-linux-x86_64.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/libusb4java-1.3.0-linux-x86-64.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/libusb4java-1.2.0-linux-x86.jar</runtime-relative-path>
+                                                   libusb4java-1.3.0-linux-x86.jar
+                <runtime-relative-path>../jmri/lib/libusb4java-1.3.0-linux-x86.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/libusb4java-1.2.0-osx-x86_64.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/libusb4java-1.3.0-darwin-x86-64.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/libusb4java-1.2.0-osx-x86.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/libusb4java-1.3.0-win32-x86-64.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/libusb4java-1.2.0-windows-x86_64.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>../jmri/lib/libusb4java-1.2.0-windows-x86.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/libusb4java-1.3.0-win32-x86.jar</runtime-relative-path>
             </class-path-extension>
             <!-- We distribute 1.2.15 -->
             <class-path-extension>
@@ -926,19 +925,16 @@
                 <runtime-relative-path>../jmri/lib/slf4j-log4j12-1.7.25.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/smtp.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>../jmri/lib/spotbugs-annotations.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/thumbnailator-0.4.8.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/usb4java-1.2.0.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/usb4java-1.3.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/usb4java-javax-1.2.0.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/usb4java-javax-1.3.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/usb-api-1.0.2.jar</runtime-relative-path>
@@ -947,25 +943,31 @@
                 <runtime-relative-path>../jmri/lib/vecmath-1.5.2.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/websocket-api-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/websocket-api-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/websocket-client-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/websocket-client-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/websocket-common-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/websocket-common-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/websocket-server-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/websocket-server-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../jmri/lib/websocket-servlet-9.4.7.v20170914.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/lib/websocket-servlet-9.4.26.v20200117.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/xbee-java-library-1.2.1.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/mailapi.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>../jmri/lib/jna-4.4.0.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>../jmri/lib/jna-platform-4.4.0.jar</runtime-relative-path>
             </class-path-extension>
         </data>
     </configuration>

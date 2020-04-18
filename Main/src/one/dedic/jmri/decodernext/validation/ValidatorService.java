@@ -5,18 +5,28 @@
  */
 package one.dedic.jmri.decodernext.validation;
 
+import com.jgoodies.validation.Validatable;
+import com.jgoodies.validation.ValidationMessage;
 import com.jgoodies.validation.ValidationResult;
 import java.awt.Component;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import javax.swing.JLabel;
 import javax.swing.event.ChangeListener;
 
 /**
- *
+ * ValidatorService represents a Validator attached to its data source. The Service
+ * implementation fires to {@link ChangeListener} when the data source changes, but 
+ * only validates if {@link #validate} is called.
+ * <p/>
+ * The service caches last validation result and returns it from {@link #getValidation()}
+ * in any thread. The validation iself <b>must</b> be called in UI thread.
+ * <p/>
+ * The Validator instance will be attached to the JComponent using {@link ValidationConstants#COMPONENT_VALIDATOR}
+ * client property, so it can be extracted from the component tree.
+ * 
  * @author sdedic
  */
-public interface ValidatorService {
+public interface ValidatorService extends SwingAttached, Validatable {
     /**
      * Adds a change listener. The method may be called from any thread, but
      * the listener will be always invoked in the Swing EDT.
@@ -39,6 +49,7 @@ public interface ValidatorService {
      * @return 
      */
     @Nonnull
+    @Override
     public ValidationResult validate();
     
     /**
@@ -50,11 +61,4 @@ public interface ValidatorService {
      */
     @CheckReturnValue
     public Component findComponent(Object key);
-    
-    /**
-     * Returns an indicator which can be used to represent
-     * results of a validation.
-     * @return indicator Component
-     */
-    public JLabel getIndicator();
 }

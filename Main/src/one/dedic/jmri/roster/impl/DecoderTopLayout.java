@@ -13,6 +13,8 @@ import jmri.jmrit.roster.RosterEntry;
 import one.dedic.jmri.decodernext.ui.ComposedPane;
 import one.dedic.jmri.decodernext.ui.Section;
 import one.dedic.jmri.decodernext.ui.ValidatingUI;
+import one.dedic.jmri.decodernext.validation.FeedbackController;
+import one.dedic.jmri.decodernext.validation.ValidatorService;
 import one.dedic.jmri.roster.detail.EntryModel;
 import one.dedic.jmri.roster.detail.RosterDetail;
 import org.openide.nodes.AbstractNode;
@@ -20,6 +22,9 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -29,12 +34,22 @@ public class DecoderTopLayout extends javax.swing.JPanel {
     private final RosterEntry entry;
     private final EntryModel  entryModel;
     
+    private FeedbackController feedbackController;
+    private Lookup detailContext;
+    private InstanceContent contextStorage = new InstanceContent();
+    
     /**
      * Creates new form DecoderTopLayout
      */
     public DecoderTopLayout(EntryModel model) {
         this.entryModel = model;
         this.entry = model.getEntry();
+        
+        contextStorage.add(model);
+        contextStorage.add(entry);
+        contextStorage.add(model.getRoster());
+        
+        detailContext = new AbstractLookup(contextStorage);
         
         initComponents();
         
@@ -46,6 +61,8 @@ public class DecoderTopLayout extends javax.swing.JPanel {
         n.setName("Model Information");
         
         cp.addSection(new Section() {
+            RosterDetail detail;
+            
             @Override
             public Object getKey() {
                 return "Model Information";
@@ -62,7 +79,10 @@ public class DecoderTopLayout extends javax.swing.JPanel {
             }
 
             @Override
-            public JPanel createComponent() {
+            public RosterDetail createComponent() {
+                if (detail != null) {
+                    return detail;
+                }
                 RosterDetail d = new RosterDetail(entryModel);
                 d.setRoster(model.getRoster());
                 try {
@@ -70,12 +90,13 @@ public class DecoderTopLayout extends javax.swing.JPanel {
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
+                detail = d;
                 return d;
             }
 
             @Override
-            public ValidatingUI getValidation() {
-                return null;
+            public ValidatorService getValidation() {
+                return createComponent().getValidatorService();
             }
 
             @Override
@@ -86,6 +107,21 @@ public class DecoderTopLayout extends javax.swing.JPanel {
             public void removeChangeListener(ChangeListener l) {
             }
         });
+        
+        feedbackController = new FeedbackController();
+        feedbackController.setContext(detailContext);
+    }
+
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        feedbackController.connectFrom(this);
+        feedbackController.performValidation();
     }
 
     /**
@@ -117,7 +153,7 @@ public class DecoderTopLayout extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(actionToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sectionGroups, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
+                .addComponent(sectionGroups, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

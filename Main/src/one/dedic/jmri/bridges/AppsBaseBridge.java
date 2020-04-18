@@ -6,10 +6,13 @@
 package one.dedic.jmri.bridges;
 
 import apps.AppsBase;
+import static apps.AppsBase.getConfigFileName;
+import apps.Bundle;
 import apps.CreateButtonModel;
 import apps.gui3.tabbedpreferences.TabbedPreferences;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
@@ -24,6 +27,7 @@ import jmri.jmrit.display.layoutEditor.BlockValueFile;
 import jmri.jmrit.revhistory.FileHistory;
 import jmri.managers.DefaultShutDownManager;
 import jmri.profile.Profile;
+import jmri.profile.ProfileManager;
 import jmri.util.FileUtil;
 import jmri.util.FileUtilSupport;
 import jmri.util.Log4JUtil;
@@ -106,49 +110,109 @@ public class AppsBaseBridge implements Runnable {
     }
     
     public void initJMRI() {
-        // override shutdown manager with NetBeans-friendly version
-        InstanceManager.store(new JmriDefaultShutDownManager(), ShutDownManager.class);
-        
-        File embeddedJMRIDir = InstalledFileLocator.getDefault().locate("jmri", "one.dedic.decodernext.main", false);
-        FileUtilSupport.getDefault().setProgramPath(embeddedJMRIDir);
+        try {
+            // override shutdown manager with NetBeans-friendly version
+            InstanceManager.store(new JmriDefaultShutDownManager(), ShutDownManager.class);
+            // hack in the 
 
-        /*
-        if (!preInit) {
-            preInit(applicationName);
-            setConfigFilename(configFileDef, args);
+            File embeddedJMRIDir = InstalledFileLocator.getDefault().locate("jmri", "one.dedic.decodernext.main", false);
+            FileUtilSupport.getDefault().setProgramPath(embeddedJMRIDir);
+
+            /*
+            if (!preInit) {
+                preInit(applicationName);
+                setConfigFilename(configFileDef, args);
+            }
+
+            */
+            PrintStream origOut = System.out;
+            PrintStream origErr = System.err;
+
+    //        Log4JUtil.initLogging();
+
+            System.setOut(origOut);
+            System.setErr(origErr);
+
+            configureProfile();
+
+            installConfigurationManager();
+
+            addDefaultShutDownTasks();
+
+            installManagers();
+
+            setAndLoadPreferenceFile();
+
+            FileUtil.logFilePaths();
+
+            // all loaded, initialize objects as necessary
+            InstanceManager.getDefault(jmri.LogixManager.class).activateAllLogixs();
+            InstanceManager.getDefault(jmri.jmrit.display.layoutEditor.LayoutBlockManager.class).initializeLayoutBlockPaths();
+
+            loaded = true;
+
+            JmriServicesBridge br = Lookup.getDefault().lookup(JmriServicesBridge.class);
+            br.run();
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
         }
-
-        */
-        PrintStream origOut = System.out;
-        PrintStream origErr = System.err;
-
-//        Log4JUtil.initLogging();
-        
-        System.setOut(origOut);
-        System.setErr(origErr);
-
-        // configureProfile();
-
-        installConfigurationManager();
-
-        addDefaultShutDownTasks();
-
-        installManagers();
-
-        setAndLoadPreferenceFile();
-
-        FileUtil.logFilePaths();
-
-        // all loaded, initialize objects as necessary
-        InstanceManager.getDefault(jmri.LogixManager.class).activateAllLogixs();
-        InstanceManager.getDefault(jmri.jmrit.display.layoutEditor.LayoutBlockManager.class).initializeLayoutBlockPaths();
-
-        loaded = true;
-        
-        JmriServicesBridge br = Lookup.getDefault().lookup(JmriServicesBridge.class);
-        br.run();
     }
     
+    protected void configureProfile() {
+        String profileFilename;
+        FileUtil.createDirectory(FileUtil.getPreferencesPath());
+        // Needs to be declared final as we might need to
+        // refer to this on the Swing thread
+        File profileFile;
+        profileFilename = getConfigFileName().replaceFirst(".xml", ".properties");
+        // decide whether name is absolute or relative
+        if (!new File(profileFilename).isAbsolute()) {
+            // must be relative, but we want it to
+            // be relative to the preferences directory
+            profileFile = new File(FileUtil.getPreferencesPath() + profileFilename);
+        } else {
+            profileFile = new File(profileFilename);
+        }
+        ProfileManager pman = ProfileManager.getDefault();
+        pman.setConfigFile(profileFile);
+        // See if the profile to use has been specified on the command line as
+        // a system property org.jmri.profile as a profile id.
+        if (System.getProperties().containsKey(ProfileManager.SYSTEM_PROPERTY)) {
+            pman.setActiveProfile(System.getProperty(ProfileManager.SYSTEM_PROPERTY));
+        }
+        try {
+            // GUI should use ProfileManagerDialog.getStartingProfile here
+            if (ProfileManager.getStartingProfile() == null && pman.getProfiles().length > 0) {
+                Profile candidate = null;
+                for (Profile p : pman.getProfiles()) {
+                    if (candidate == null) {
+                        candidate = p;
+                    } else if (candidate.getPath().lastModified() < p.getPath().lastModified()) {
+                        candidate = p;
+                    }
+                }
+                pman.setActiveProfile(candidate);
+            }
+            if (ProfileManager.getStartingProfile() != null) {
+                // Manually setting the configFilename property since calling
+                // Apps.setConfigFilename() does not reset the system property
+                System.setProperty("org.jmri.Apps.configFilename", Profile.CONFIG_FILENAME);
+                Profile profile = pman.getActiveProfile();
+                if (profile != null) {
+                    log.info("Starting with profile {}", profile.getId());
+                } else {
+                    log.info("Starting without a profile");
+                }
+            } else {
+                log.error("Specify profile to use as command line argument.");
+                log.error("If starting with saved profile configuration, ensure the autoStart property is set to \"true\"");
+                log.error("Profiles not configurable. Using fallback per-application configuration.");
+            }
+        } catch (IOException ex) {
+            log.info("Profiles not configurable. Using fallback per-application configuration. Error: {}", ex.getMessage());
+        }
+    }
+
     protected void installConfigurationManager() {
         ConfigureManager cm = new JmriConfigurationManager();
         FileUtil.createDirectory(FileUtil.getUserFilesPath());
@@ -193,6 +257,7 @@ public class AppsBaseBridge implements Runnable {
             }
         } catch (FileNotFoundException ex) {
             // ignore - this only means that sharedConfig does not exist.
+            ex.printStackTrace();
         }
         if (sharedConfig != null) {
             file = sharedConfig;

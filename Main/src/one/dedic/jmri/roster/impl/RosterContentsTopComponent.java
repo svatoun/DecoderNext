@@ -6,6 +6,10 @@
 package one.dedic.jmri.roster.impl;
 
 import java.awt.BorderLayout;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import jmri.jmrit.roster.Roster;
 import jmri.profile.ProfileManager;
 import one.dedic.jmri.bridges.AppsBaseBridge;
@@ -31,12 +35,11 @@ preferredID = "AnalysisResultTopComponent")
     "WINDOW_RosterContents=Roster"
 })
 @RetainLocation("listings")
-public class RosterContentsTopComponent extends TopComponent {
+public class RosterContentsTopComponent extends TopComponent implements Externalizable {
     static final String PREFERRED_ID = "RosterContentsTopComponent";
     private RosterContentPane contentPanel;
     
     public RosterContentsTopComponent() {
-        ProfileManager.getDefault().setActiveProfile("My_JMRI_Railroad.3f4f1e1a");
         setLayout(new BorderLayout());
         setName(Bundle.WINDOW_RosterContents());
     }
@@ -63,4 +66,5 @@ public class RosterContentsTopComponent extends TopComponent {
     private void printRoster() {
         System.err.println(Roster.getDefault().getAllEntries());
     }
+    
 }

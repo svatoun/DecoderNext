@@ -30,6 +30,9 @@ public class JmriURLmapper extends URLMapper {
         if (Boolean.TRUE.equals(inURLMapper.get())) {
             return null;
         }
+        if (!AppsBaseBridge.getInstance().isJMRILoaded()) {
+            return null;
+        }
         try {
             inURLMapper.set(true);
             File f = org.openide.filesystems.FileUtil.toFile(fo);
@@ -56,6 +59,9 @@ public class JmriURLmapper extends URLMapper {
     public FileObject[] getFileObjects(URL url) {
         String proto = url.getProtocol();
         if (!"jmri".equals(proto)) {
+            return null;
+        }
+        if (!AppsBaseBridge.getInstance().isJMRILoaded()) {
             return null;
         }
         String pref = url.getAuthority();

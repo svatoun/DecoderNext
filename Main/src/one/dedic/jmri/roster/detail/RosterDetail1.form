@@ -23,20 +23,16 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lRoadNumber" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lID" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lRoadName" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lDescription" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lFamily" alignment="0" max="32767" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="lOwner" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Component id="lNotes" max="32767" attributes="0"/>
+                                  <Component id="lNotes" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lFamily" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lOwner" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lDescription" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lRoadName" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lRoadNumber" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lID" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="descriptionScroll" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="owner" linkSize="2" alignment="0" max="32767" attributes="0"/>
@@ -53,10 +49,10 @@
                                           <Component id="stID" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="lManufacturer" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="lType" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="lModel" alignment="0" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lModel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lType" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lManufacturer" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -64,13 +60,19 @@
                                           <Component id="type" linkSize="3" alignment="0" max="32767" attributes="0"/>
                                           <Component id="manufacturer" linkSize="3" alignment="0" pref="200" max="32767" attributes="0"/>
                                       </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="stManufacturer" min="-2" max="-2" attributes="0"/>
+                                          <Component id="stModelType" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
-                                  <Component id="notesScroll" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="stManufacturer" min="-2" max="-2" attributes="0"/>
-                                  <Component id="stModelType" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="notesScroll" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="descriptionScroll" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -85,7 +87,7 @@
                       <Component id="lModelCaption" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="785" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -160,42 +162,42 @@
           </FontInfo>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lModelCaption.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lModelCaption.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lID">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lID.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lID.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lRoadName">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lRoadName.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lRoadName.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lRoadNumber">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lRoadNumber.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lRoadNumber.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lDescription">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lDescription.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lDescription.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="id">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.id.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.id.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -221,7 +223,7 @@
           <ComponentRef name="id"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.stID.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.stID.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -231,7 +233,7 @@
           <ComponentRef name="id"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.stRoadName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.stRoadName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -241,21 +243,21 @@
           <ComponentRef name="roadNumber"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.stRoadNumber.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.stRoadNumber.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lManufacturer">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lManufacturer.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lManufacturer.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lType">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lType.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lType.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -281,7 +283,7 @@
           <ComponentRef name="roadNumber"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.stManufacturer.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.stManufacturer.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -291,7 +293,7 @@
           <ComponentRef name="roadNumber"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.stModelType.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.stModelType.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -314,7 +316,7 @@
     <Component class="javax.swing.JLabel" name="lOwner">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lOwner.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lOwner.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -335,7 +337,7 @@
           <ComponentRef name="owner"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.stOwner.text_2" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.stOwner.text_2_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -347,7 +349,7 @@
           </FontInfo>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lDecoderCaption.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lDecoderCaption.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -356,7 +358,7 @@
     <Component class="javax.swing.JLabel" name="lFamily">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lFamily.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lFamily.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -367,14 +369,14 @@
           <Connection component="Form" name="background" type="property"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.decoderFamily.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.decoderFamily.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lModel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lModel.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lModel.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -385,14 +387,14 @@
           <Connection component="Form" name="background" type="property"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.decoderModel.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.decoderModel.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lNotes">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail.lNotes.text_3" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="one/dedic/jmri/roster/detail/Bundle.properties" key="RosterDetail1.lNotes.text_3_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

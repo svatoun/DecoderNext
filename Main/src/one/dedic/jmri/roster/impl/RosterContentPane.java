@@ -8,7 +8,6 @@ package one.dedic.jmri.roster.impl;
 import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

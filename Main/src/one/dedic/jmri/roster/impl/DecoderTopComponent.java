@@ -28,13 +28,13 @@ import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.openide.windows.TopComponent;
+import org.openide.windows.CloneableTopComponent;
 
 /**
  *
  * @author sdedic
  */
-public class DecoderTopComponent extends TopComponent implements LookupListener {
+public class DecoderTopComponent extends CloneableTopComponent implements LookupListener {
     private final InstanceContent lookupContent;
     
     /**
@@ -54,8 +54,8 @@ public class DecoderTopComponent extends TopComponent implements LookupListener 
      * Constructor for deserialization only
      */
     public DecoderTopComponent() {
-        super(new AbstractLookup(deserializedContent.get()));
         this.lookupContent = deserializedContent.get();
+        associateLookup(new AbstractLookup(deserializedContent.get()));
         deserializedContent.remove();
         setLayout(new BorderLayout());
         add(createInterimContent(), BorderLayout.CENTER);
