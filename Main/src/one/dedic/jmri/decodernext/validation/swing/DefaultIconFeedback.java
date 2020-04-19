@@ -80,7 +80,7 @@ public class DefaultIconFeedback implements ValidationFeedback, ContextValidator
         switch (s) {
             case OK:
                 if (lastSeverity != null &&
-                    (lastSeverity.ordinal() >= Severity.WARNING.ordinal())) {
+                    (lastSeverity.ordinal() <= Severity.WARNING.ordinal())) {
                     iconResource = ValidationConstants.OK_ICON;
                     fadeIcon = true;
                 } else {
@@ -105,29 +105,51 @@ public class DefaultIconFeedback implements ValidationFeedback, ContextValidator
         if (fadeIcon) {
             fadeTimer = new Timer(2000, this::removeIcon);
             fadeTimer.setRepeats(false);
+            fadeTimer.start();
         }
         
         String text = result.getMessagesText();
-        if (text != null) {
-            Rectangle labelBounds = label.getBounds();
-            Point leftTop = labelBounds.getLocation();
-            leftTop.move(4, 4);
-            MouseEvent ev = new MouseEvent(label, 0, System.currentTimeMillis(), 
-                    0, leftTop.x, leftTop.x, 0, false);
-            ToolTipManager mgr = ToolTipManager.sharedInstance();
-            try {
-                Field f = mgr.getClass().getDeclaredField("showImmediately");
-                f.setAccessible(true);
-                f.set(null, Boolean.TRUE);
-            } catch (ReflectiveOperationException ex) {
-                // ignore
+        JComponent linked = ((JComponent)label.getLabelFor());
+        label.setToolTipText(text);
+        if (text != null && s.ordinal() <= s.WARNING.ordinal()) {
+            if (s != lastSeverity) {
+                JComponent tooltipTarget = label;
+                String originalTooltip = null;
+                
+                if (linked != null) {
+                    originalTooltip = linked.getToolTipText();
+                    linked.setToolTipText(text);
+                    tooltipTarget = linked;
+                }
+                Rectangle labelBounds = label.getBounds();
+                Point leftTop = labelBounds.getLocation();
+                leftTop.move(4, 4);
+                MouseEvent ev = new MouseEvent(tooltipTarget, 0, System.currentTimeMillis(), 
+                        0, leftTop.x, leftTop.x, 0, false);
+                ToolTipManager mgr = ToolTipManager.sharedInstance();
+                Field f = null;
+                try {
+                    f = mgr.getClass().getDeclaredField("showImmediately");
+                    f.setAccessible(true);
+                    f.set(mgr, Boolean.TRUE);
+                    mgr.mouseMoved(ev);
+                    f.set(mgr, false);
+                } catch (ReflectiveOperationException ex) {
+                    // ignore
+                }
+                if (tooltipTarget != null) {
+                    tooltipTarget.setToolTipText(originalTooltip);
+                }
             }
-            mgr.mouseMoved(ev);
+        } else {
+            ((JComponent)label.getLabelFor()).setToolTipText(null);
         }
+        lastSeverity = s;
     }
     
     private void removeIcon(ActionEvent e) {
         label.setIcon(ImageUtilities.loadImageIcon(ValidationConstants.EMPTY_ICON, false));
+        fadeTimer = null;
     }
 
     @Override
@@ -143,7 +165,10 @@ public class DefaultIconFeedback implements ValidationFeedback, ContextValidator
 
     @Override
     public void removeNotify() {
-        fadeTimer.stop();
+        if (fadeTimer != null) {
+            fadeTimer.stop();
+            fadeTimer = null;
+        }
     }
 
     @Override

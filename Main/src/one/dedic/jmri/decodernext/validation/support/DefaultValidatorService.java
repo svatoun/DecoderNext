@@ -231,7 +231,7 @@ public class DefaultValidatorService extends FocusAdapter implements ChangeListe
             if (service != null) {
                 service.attach(context);
             }
-            c.putClientProperty(ValidationConstants.COMPONENT_VALIDATION_KEY, service);
+            c.putClientProperty(ValidationConstants.COMPONENT_VALIDATOR, service);
         }
         return service;
     }
@@ -255,7 +255,7 @@ public class DefaultValidatorService extends FocusAdapter implements ChangeListe
             if (service != null) {
                 service.attach(context);
             }
-            c.putClientProperty(ValidationConstants.COMPONENT_VALIDATION_KEY, service);
+            c.putClientProperty(ValidationConstants.COMPONENT_VALIDATOR, service);
         }
         return service;
     }

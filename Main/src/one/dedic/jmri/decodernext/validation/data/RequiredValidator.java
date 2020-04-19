@@ -23,7 +23,7 @@ public final class RequiredValidator extends AbstractValidator {
         if (validationTarget != null) {
             String s = validationTarget.toString().trim();
             if (!s.isEmpty()) {
-                return null;
+                return ValidationResult.EMPTY;
             }
         }
         return new ValidationResult().addError(Bundle.ValidationError_CannotBeEmpty(getLabel()), 

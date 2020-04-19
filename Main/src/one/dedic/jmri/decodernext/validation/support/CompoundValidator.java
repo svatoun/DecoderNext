@@ -30,7 +30,12 @@ public class CompoundValidator implements Validator, ContextValidator {
     @Override
     public ValidationResult validate(Object validationTarget) {
         ValidationResult vr = new ValidationResult();
-        delegates.forEach((d) -> vr.addAllFrom(d.validate(validationTarget)));
+        delegates.forEach((d) -> {
+            ValidationResult res = d.validate(validationTarget);
+            if (res != null) {
+                vr.addAllFrom(res);
+            }
+        });
         return vr;
     }
 

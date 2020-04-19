@@ -5,6 +5,7 @@
  */
 package one.dedic.jmri.roster.impl;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.JPanel;
@@ -15,6 +16,7 @@ import one.dedic.jmri.decodernext.ui.Section;
 import one.dedic.jmri.decodernext.ui.ValidatingUI;
 import one.dedic.jmri.decodernext.validation.FeedbackController;
 import one.dedic.jmri.decodernext.validation.ValidatorService;
+import one.dedic.jmri.decodernext.validation.swing.SummaryFeedbackPanel;
 import one.dedic.jmri.roster.detail.EntryModel;
 import one.dedic.jmri.roster.detail.RosterDetail;
 import org.openide.nodes.AbstractNode;
@@ -38,6 +40,8 @@ public class DecoderTopLayout extends javax.swing.JPanel {
     private Lookup detailContext;
     private InstanceContent contextStorage = new InstanceContent();
     
+    private SummaryFeedbackPanel summaryPanel = new SummaryFeedbackPanel();
+    
     /**
      * Creates new form DecoderTopLayout
      */
@@ -53,6 +57,8 @@ public class DecoderTopLayout extends javax.swing.JPanel {
         
         initComponents();
         
+        feedbackArea.add(summaryPanel, BorderLayout.CENTER);
+
         ComposedPane cp = new ComposedPane();
         sectionGroups.addTab("General", ImageUtilities.loadImageIcon("one/dedic/jmri/decodernext/resources/general32.png", false), 
                 cp);
@@ -110,6 +116,7 @@ public class DecoderTopLayout extends javax.swing.JPanel {
         
         feedbackController = new FeedbackController();
         feedbackController.setContext(detailContext);
+        feedbackController.setSummaryFeedback(summaryPanel);
     }
 
     @Override
@@ -135,11 +142,14 @@ public class DecoderTopLayout extends javax.swing.JPanel {
 
         actionToolbar = new javax.swing.JToolBar();
         sectionGroups = new javax.swing.JTabbedPane();
+        feedbackArea = new javax.swing.JPanel();
 
         actionToolbar.setRollover(true);
 
         sectionGroups.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         sectionGroups.setInheritsPopupMenu(true);
+
+        feedbackArea.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -147,19 +157,24 @@ public class DecoderTopLayout extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(actionToolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(sectionGroups, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(feedbackArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(actionToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sectionGroups, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
+                .addComponent(sectionGroups, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(feedbackArea, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar actionToolbar;
+    private javax.swing.JPanel feedbackArea;
     private javax.swing.JTabbedPane sectionGroups;
     // End of variables declaration//GEN-END:variables
 }

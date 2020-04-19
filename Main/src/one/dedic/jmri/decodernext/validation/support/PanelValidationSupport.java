@@ -23,8 +23,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -180,7 +183,9 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
         for (Entry e : components.values()) {
             ValidationResult partial = e.validator.validate();
             e.partialResult = partial;
-            newResult.addAllFrom(partial);
+            if (partial != null) {
+                newResult.addAllFrom(partial);
+            }
         }
         synchronized (this) {
             result = newResult;
@@ -388,33 +393,49 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
     private Set<JComponent> rescanFound;
     
     private void scanComponentTree(Container parent, Predicate<JComponent> processor) {
-        for (Component c : parent.getComponents()) {
-            if (c == null) {
-                continue;
-            }
-            if (!(c instanceof JComponent) && acceptor.test(c)) {
-                continue;
-            }
-            JComponent jc = (JComponent)c;
-            rescanFound.add(jc);
-            if (components.containsKey(jc)) {
-                continue;
-            }
-            if (processor.test(jc)) {
-                continue;
-            }
-            if (c instanceof Container) {
-                Container owner = (Container)c;
-                if (owner.getComponentCount() > 0) {
-                    scanComponents((Container)c);
+        if (level == 0) {
+            rescanFound = new HashSet<>();
+        }
+        level++;
+        try {
+            for (Component c : parent.getComponents()) {
+                if (c == null) {
+                    continue;
+                }
+                if (!(c instanceof JComponent) && acceptor.test(c)) {
+                    continue;
+                }
+                JComponent jc = (JComponent)c;
+                rescanFound.add(jc);
+                if (components.containsKey(jc)) {
+                    continue;
+                }
+                if (processor.test(jc)) {
+                    continue;
+                }
+                if (c instanceof Container) {
+                    Container owner = (Container)c;
+                    if (owner.getComponentCount() > 0) {
+                        scanComponents((Container)c);
+                    }
                 }
             }
+        } finally {
+            level--;
+        }
+        
+        if (level == 0) {
+            // remove potential components NOT found:
+            Set<JComponent> registered = new HashSet<>(components.keySet());
+            registered.removeAll(rescanFound);
+            detach(registered);
         }
     }
     
+    private int level;
+    
     private void scanComponents(Container parent) {
         LOG.debug("Scanning for validatable components in {}", parent);
-        rescanFound = new HashSet<>();
         scanComponentTree(parent, (c) -> {
             LOG.debug("Inspecting: {}", c);
             JComponent jc = (JComponent)c;
@@ -427,11 +448,6 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
             attachIconHolder(c);
             return components.containsKey(c);
         });
-        
-        // remove potential components NOT found:
-        Set<JComponent> registered = new HashSet<>(components.keySet());
-        registered.removeAll(rescanFound);
-        detach(registered);
     }
     
     private void detach(Collection<JComponent> unregister) {
@@ -469,10 +485,18 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
     
     @Override
     public void indicateResult(ValidationResult result) {
-        forwardPartialResults(result, ValidationFeedback::indicateResult);
+        forwardPartialResults(result, (f, r) -> {
+            f.indicateResult(r);
+            return null;
+        });
     }
     
-    private void forwardPartialResults(ValidationResult result, BiConsumer<ValidationFeedback, ValidationResult> delegate) {
+    private Collection<ValidationFeedback> getAllFeedbacks() {
+        return components.values().stream().flatMap(e -> e.feedbacks.stream()).collect(Collectors.toSet());
+    }
+    
+    private boolean forwardPartialResults(ValidationResult result, BiFunction<ValidationFeedback, ValidationResult, Boolean> delegate) {
+        Collection<ValidationFeedback> remainder = getAllFeedbacks();
         Map<ValidationFeedback, Set<ValidationMessage>> messageSets = new HashMap<>();
         List<ValidationMessage> allMessages = result.getMessages();
         for (Entry e : components.values()) {
@@ -487,15 +511,21 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
                 for (ValidationMessage m : allMessages) {
                     if (fk.contains(m.key())) {
                         messageSets.computeIfAbsent(f, (f2) -> new LinkedHashSet<>()).add(m);
+                        remainder.remove(f);
                     }
                 }
             });
         }
+        boolean allOK = true;
         for (ValidationFeedback f : messageSets.keySet()) {
             ValidationResult forward = new ValidationResult();
             forward.addAll(new ArrayList<>(messageSets.get(f)));
-            delegate.accept(f, forward);
+            if (Boolean.FALSE.equals(delegate.apply(f, forward))) {
+                allOK = false;
+            }
         }
+        remainder.stream().forEach(f -> delegate.apply(f, ValidationResult.EMPTY));
+        return allOK;
     }
 
     @Override

@@ -96,6 +96,7 @@ public class ValidatorBuilder {
             if (c instanceof JLabel) {
                 JLabel l = (JLabel)c;
                 if (l.getLabelFor() == theComponent &&
+                    l != iconIndicator &&
                     l.getText().length() > 1) {
                     controlLabel = l;
                     return l;
@@ -185,6 +186,7 @@ public class ValidatorBuilder {
     }
     
     private void declareFeedback() {
+        theComponent.putClientProperty(ValidationConstants.COMPONENT_VALIDATION_KEY, key);
         if (iconIndicator == null) {
             return;
         }
@@ -201,6 +203,8 @@ public class ValidatorBuilder {
         Validator product = constructValidator();
         declareValidator();
         declareFeedback();
+        
+        ValidationUtils.attachValidator(theComponent, product);
         
         return product;
     }

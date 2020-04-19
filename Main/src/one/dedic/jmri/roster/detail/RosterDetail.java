@@ -75,7 +75,7 @@ public class RosterDetail extends javax.swing.JPanel {
         setFocusTraversalPolicyProvider(true);
         setFocusTraversalPolicy(new ExplicitLayoutFocusPolicy(this, focusOrder));
         
-        ValidatorBuilder.forComponent(decoderModel).
+        ValidatorBuilder.forComponent(id).
                 key("rosterEntry.id").
                 value(new TextValue()).
                 validate(
@@ -214,12 +214,16 @@ public class RosterDetail extends javax.swing.JPanel {
         lModelCaption.setFont(lModelCaption.getFont().deriveFont((lModelCaption.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD));
         org.openide.awt.Mnemonics.setLocalizedText(lModelCaption, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lModelCaption.text_3")); // NOI18N
 
+        lID.setLabelFor(id);
         org.openide.awt.Mnemonics.setLocalizedText(lID, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lID.text_3")); // NOI18N
 
+        lRoadName.setLabelFor(roadName);
         org.openide.awt.Mnemonics.setLocalizedText(lRoadName, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lRoadName.text_3")); // NOI18N
 
+        lRoadNumber.setLabelFor(roadNumber);
         org.openide.awt.Mnemonics.setLocalizedText(lRoadNumber, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lRoadNumber.text_3")); // NOI18N
 
+        lDescription.setLabelFor(description);
         org.openide.awt.Mnemonics.setLocalizedText(lDescription, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lDescription.text_3")); // NOI18N
 
         id.setText(org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.id.text_3")); // NOI18N
@@ -231,24 +235,26 @@ public class RosterDetail extends javax.swing.JPanel {
         stID.setLabelFor(id);
         org.openide.awt.Mnemonics.setLocalizedText(stID, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stID.text_3")); // NOI18N
 
-        stRoadName.setLabelFor(id);
+        stRoadName.setLabelFor(roadName);
         org.openide.awt.Mnemonics.setLocalizedText(stRoadName, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stRoadName.text")); // NOI18N
 
         stRoadNumber.setLabelFor(roadNumber);
         org.openide.awt.Mnemonics.setLocalizedText(stRoadNumber, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stRoadNumber.text_3")); // NOI18N
 
+        lManufacturer.setLabelFor(manufacturer);
         org.openide.awt.Mnemonics.setLocalizedText(lManufacturer, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lManufacturer.text_3")); // NOI18N
 
+        lType.setLabelFor(type);
         org.openide.awt.Mnemonics.setLocalizedText(lType, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lType.text_3")); // NOI18N
 
         manufacturer.setEditable(true);
 
         type.setEditable(true);
 
-        stManufacturer.setLabelFor(roadNumber);
+        stManufacturer.setLabelFor(manufacturer);
         org.openide.awt.Mnemonics.setLocalizedText(stManufacturer, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stManufacturer.text")); // NOI18N
 
-        stModelType.setLabelFor(roadNumber);
+        stModelType.setLabelFor(type);
         org.openide.awt.Mnemonics.setLocalizedText(stModelType, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.stModelType.text")); // NOI18N
 
         description.setColumns(20);
@@ -256,6 +262,7 @@ public class RosterDetail extends javax.swing.JPanel {
         description.setRows(5);
         descriptionScroll.setViewportView(description);
 
+        lOwner.setLabelFor(owner);
         org.openide.awt.Mnemonics.setLocalizedText(lOwner, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lOwner.text_3")); // NOI18N
 
         owner.setEditable(true);
@@ -266,18 +273,21 @@ public class RosterDetail extends javax.swing.JPanel {
         lDecoderCaption.setFont(lDecoderCaption.getFont().deriveFont((lDecoderCaption.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD));
         org.openide.awt.Mnemonics.setLocalizedText(lDecoderCaption, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lDecoderCaption.text_3")); // NOI18N
 
+        lFamily.setLabelFor(decoderFamily);
         org.openide.awt.Mnemonics.setLocalizedText(lFamily, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lFamily.text_3")); // NOI18N
 
         decoderFamily.setEditable(false);
         decoderFamily.setBackground(getBackground());
         decoderFamily.setText(org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.decoderFamily.text_3")); // NOI18N
 
+        lModel.setLabelFor(decoderModel);
         org.openide.awt.Mnemonics.setLocalizedText(lModel, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lModel.text_3")); // NOI18N
 
         decoderModel.setEditable(false);
         decoderModel.setBackground(getBackground());
         decoderModel.setText(org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.decoderModel.text_3")); // NOI18N
 
+        lNotes.setLabelFor(notes);
         org.openide.awt.Mnemonics.setLocalizedText(lNotes, org.openide.util.NbBundle.getMessage(RosterDetail.class, "RosterDetail.lNotes.text_3")); // NOI18N
 
         notes.setColumns(20);

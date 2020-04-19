@@ -8,6 +8,7 @@ package one.dedic.jmri.decodernext.validation.data;
 import com.jgoodies.validation.Severity;
 import com.jgoodies.validation.ValidationResult;
 import com.jgoodies.validation.message.SimpleValidationMessage;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import jmri.jmrit.roster.Roster;
@@ -25,12 +26,21 @@ import org.openide.util.NbBundle;
  * @author sdedic
  */
 @NbBundle.Messages({
-    "# {0} - property label",
+    "# {0} - property value",
     "ValidationError_ValueIsUsed=Value must be unique, it is already used.",
+    "# {0} - property label",
+    "# {1} - property value",
+    "ValidationError_ValueIsUsed2={0} must be unique, \"{1}\" is already used.",
     "# {0} - property label",
     "ValidationError_WarnShouldBeUnique={0} should be unique.",
     "# {0} - property label",
-    "ValidationError_InfoNewValue=A new {0} will be introduced. Check spelling."
+    "# {1} - property value",
+    "ValidationError_WarnShouldBeUnique2={0} should be unique.",
+    "# {0} - property label",
+    "# {1} - property value",
+    "ValidationError_InfoNewValue2=A new {0} will be introduced. Check spelling.",
+    "# {0} - property label",
+    "ValidationError_InfoNewValue=A new entry \"{0}\" will be introduced. Check spelling."
 })
 public class RosterPropertyValidator implements ValidatorSetup, ContextValidator {
     private Object messageKey;
@@ -112,15 +122,19 @@ public class RosterPropertyValidator implements ValidatorSetup, ContextValidator
                 return null;
             }
             boolean match = ignoreCase ? s.equalsIgnoreCase(n) : s.equals(n);
-            if (match && en != entry) {
+            if (match && (en != entry && !Objects.equals(entry.getId(), en.getId()))) {
                 if (unique) {
                     return new ValidationResult().
                             add(warnDuplicate ?
                                     new SimpleValidationMessage(
-                                        Bundle.ValidationError_WarnShouldBeUnique(label), 
+                                        label == null ? 
+                                            Bundle.ValidationError_WarnShouldBeUnique(s) : 
+                                            Bundle.ValidationError_WarnShouldBeUnique2(label, s), 
                                         Severity.WARNING, messageKey) :
                                     new SimpleValidationMessage(
-                                        Bundle.ValidationError_ValueIsUsed(label), 
+                                        label == null ? 
+                                            Bundle.ValidationError_ValueIsUsed(s): 
+                                            Bundle.ValidationError_ValueIsUsed2(label, s), 
                                         Severity.ERROR, messageKey)
                             );
                 } else {
@@ -131,8 +145,15 @@ public class RosterPropertyValidator implements ValidatorSetup, ContextValidator
         if (unique || found) {
             return null;
         }
+        if (s.isEmpty()) {
+            return null;
+        }
         return new ValidationResult().
-                addInfo(Bundle.ValidationError_InfoNewValue(label), messageKey);
+                addInfo(
+                    label == null ?
+                        Bundle.ValidationError_InfoNewValue(s) :
+                        Bundle.ValidationError_InfoNewValue2(label, s), 
+                    messageKey);
     }
 
     @Override

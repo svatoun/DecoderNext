@@ -44,12 +44,22 @@ public class FeedbackController {
     private Lookup context;
     private ValidationResult  result = ValidationResult.EMPTY;
     private Map<Object, Collection<ValidationFeedback>> feedbacks = new HashMap<>();
+    private Collection<ValidationFeedback> allFeedbacks = new HashSet<>();
     
     private Set<ValidationMessage>  suppressedMessages = new HashSet<>();
     private Set<Object> suppressedKeys = new HashSet<>();
     private Timer scheduled = new Timer(300, l);
     
     private ValidatorGroup  validators = new ValidatorGroup();
+    
+    /**
+     * Summary feedback, which is always set.
+     */
+    private ValidationFeedback  summaryFeedback;
+
+    public FeedbackController() {
+        validators.addChangeListener(l);
+    }
     
     class L implements ChangeListener, ActionListener {
 
@@ -63,6 +73,14 @@ public class FeedbackController {
             performValidation();
         }
         
+    }
+
+    public ValidationFeedback getSummaryFeedback() {
+        return summaryFeedback;
+    }
+
+    public void setSummaryFeedback(ValidationFeedback summaryFeedback) {
+        this.summaryFeedback = summaryFeedback;
     }
 
     public Lookup getContext() {
@@ -103,6 +121,7 @@ public class FeedbackController {
         if (feedback instanceof ContextValidator) {
             ((ContextValidator)feedback).attach(context);
         }
+        allFeedbacks.add(feedback);
     }
     
     public void performValidation() {
@@ -118,14 +137,26 @@ public class FeedbackController {
         for (ValidationMessage msg : result.getMessages()) {
             Object k = msg.key();
             Collection<ValidationFeedback> fbs = feedbacks.get(k);
+            if (fbs == null) {
+                continue;
+            }
             for (ValidationFeedback fb : fbs) {
                 partials.computeIfAbsent(fb, (f) -> new LinkedHashSet<>()).add(msg);
             }
         }
+        Set<ValidationFeedback> remainder = new HashSet<>(allFeedbacks);
         for (ValidationFeedback fb : partials.keySet()) {
             ValidationResult r = new ValidationResult();
             r.addAll(new ArrayList<>(partials.get(fb)));
-            fb.indicateResult(r);
+            if (!fb.reportMessages(r)) {
+                fb.indicateResult(r);
+            }
+            remainder.remove(fb);
+        }
+        remainder.stream().forEach(f -> f.indicateResult(ValidationResult.EMPTY));
+        
+        if (summaryFeedback != null) {
+            summaryFeedback.reportMessages(result);
         }
     }
     
