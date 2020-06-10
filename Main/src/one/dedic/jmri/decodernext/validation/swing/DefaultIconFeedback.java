@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Set;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -25,6 +26,7 @@ import one.dedic.jmri.decodernext.validation.ValidationConstants;
 import one.dedic.jmri.decodernext.validation.ValidationFeedback;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -158,9 +160,23 @@ public class DefaultIconFeedback implements ValidationFeedback, ContextValidator
         return false;
     }
 
+    @NbBundle.Messages({
+        "# {0} - name of the component",
+        "ACTION_SelectComponent=Go to {0}"
+    })
     @Override
     public Action transferControl(Object key) {
-        return null;
+        if (!keys.contains(key)) {
+            return null;
+        }
+        AbstractAction action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                target.requestFocus();
+            }
+        };
+        action.putValue(Action.NAME, getComponentName());
+        return action;
     }
 
     @Override

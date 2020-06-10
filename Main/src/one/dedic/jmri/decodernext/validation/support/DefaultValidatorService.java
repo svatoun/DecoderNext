@@ -99,11 +99,11 @@ public class DefaultValidatorService extends FocusAdapter implements ChangeListe
             ((ContextValidator) delegate).attach(context);
         }
         if (delegate != null) {
-            return delegate.validate(target);
+            return result = delegate.validate(target);
         } else if (delegate2 != null) {
-            return delegate2.validate();
+            return result = delegate2.validate();
         }
-        return ValidationResult.EMPTY;
+        return result = ValidationResult.EMPTY;
     }
     
     @Override
@@ -231,7 +231,7 @@ public class DefaultValidatorService extends FocusAdapter implements ChangeListe
             if (service != null) {
                 service.attach(context);
             }
-            c.putClientProperty(ValidationConstants.COMPONENT_VALIDATOR, service);
+            c.putClientProperty(ValidationConstants.COMPONENT_VALIDATOR_SERVICE, service);
         }
         return service;
     }
@@ -255,7 +255,7 @@ public class DefaultValidatorService extends FocusAdapter implements ChangeListe
             if (service != null) {
                 service.attach(context);
             }
-            c.putClientProperty(ValidationConstants.COMPONENT_VALIDATOR, service);
+            c.putClientProperty(ValidationConstants.COMPONENT_VALIDATOR_SERVICE, service);
         }
         return service;
     }

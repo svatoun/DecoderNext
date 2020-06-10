@@ -8,7 +8,7 @@ package one.dedic.jmri.decodernext.validation;
 import org.openide.util.Lookup;
 
 /**
- *
+ * FIXME: rename
  * @author sdedic
  */
 public interface ContextValidator {

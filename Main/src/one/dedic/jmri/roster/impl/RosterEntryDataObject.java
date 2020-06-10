@@ -14,6 +14,8 @@ import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Map;
 import jmri.jmrit.roster.Roster;
 import jmri.jmrit.roster.RosterEntry;
 import one.dedic.jmri.bridges.AppsBaseBridge;
@@ -54,7 +56,7 @@ import org.openide.windows.TopComponent;
         displayName = "#MIME_RosterEntry",
         mimeType = "text/xml+x-locomotive-config"        
 )
-public class RosterEntryDataObject extends MultiDataObject implements Openable, Closable{
+public class RosterEntryDataObject extends MultiDataObject {
     private final InstanceContent lookupContent;
     private final Lookup lkp;
     
@@ -94,7 +96,7 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
 //            }
 //        });
 //        
-        lookupContent.add(new OSupport(getPrimaryEntry()));
+        lookupContent.add(new OSupport(getPrimaryEntry(), new OpenSupport.Env(this)));
         lkp = new ProxyLookup(new AbstractLookup(lookupContent), super.getLookup());
         
         AppsBaseBridge.getInstance().whenReady(this::connect, false);
@@ -210,6 +212,12 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
             }
         }
         if (found == null) {
+            Map<Thread, StackTraceElement[]> stacks=  Thread.getAllStackTraces();
+            for (Thread t : stacks.keySet()) {
+                System.err.println("**** Thread " + t.getName());
+                System.err.println(Arrays.asList(stacks.get(t)).toString().replace(",", "\n"));
+                System.err.println("");
+            }
             return null;
         }
         synchronized (this) {
@@ -238,29 +246,23 @@ public class RosterEntryDataObject extends MultiDataObject implements Openable, 
     }
     
     private class OSupport extends OpenSupport implements Openable, Closable {
+        private final Env env;
         
-        public OSupport(Entry entry) {
-            super(entry);
+        public OSupport(Entry entry, Env e) {
+            super(entry, e);
+            this.env = e;
         }
 
         @Override
         protected CloneableTopComponent createCloneableTopComponent() {
-            return new DecoderTopComponent(entry.getFile(), RosterEntryDataObject.this.entry);
+            return new DecoderTopComponent(
+                    entry.getFile(), 
+                    RosterEntryDataObject.this.entry,
+                    env
+            );
         }
     }
 
-    @Override
-    public void open() {
-        TopComponent tc = new DecoderTopComponent(getPrimaryFile(), entry);
-        tc.open();
-        tc.requestActive();
-    }
-
-    @Override
-    public boolean close() {
-        return false;
-    }
-    
     /**
      * Just allow to replace the node with a real one, 
      * after the Roster initializes.

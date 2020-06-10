@@ -12,23 +12,16 @@ import com.jgoodies.validation.Validator;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -38,6 +31,7 @@ import one.dedic.jmri.decodernext.validation.ContextValidator;
 import one.dedic.jmri.decodernext.validation.SwingAttached;
 import one.dedic.jmri.decodernext.validation.ValidationConstants;
 import one.dedic.jmri.decodernext.validation.ValidationFeedback;
+import one.dedic.jmri.decodernext.validation.ValidationUtils;
 import one.dedic.jmri.decodernext.validation.ValidatorService;
 import org.openide.util.Lookup;
 import org.slf4j.Logger;
@@ -47,7 +41,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author sdedic
  */
-public class PanelValidationSupport implements ValidatorService, ContextValidator, ValidationFeedback {
+public class PanelValidationSupport implements ValidatorService, ContextValidator {
     private static final Logger LOG = LoggerFactory.getLogger(PanelValidationSupport.class);
     
     public static final Predicate<Component> ALL = new Predicate<Component>() {
@@ -86,29 +80,29 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
         }
     };
     
+    private final FeedbackGroup feedbackGroup;
     private boolean changed;
     private Lookup context;
     private ValidationResult    result;
     
-    private Predicate<Component>  acceptor = new Predicate<Component>() {
-        @Override
-        public boolean test(Component t) {
-            return true;
-        }
-    };
+    private Predicate<Component>  acceptor = ALL;
 
     public PanelValidationSupport(JComponent root) {
         this.root = root;
-        root.putClientProperty(ValidationConstants.COMPONENT_VALIDATOR, this);
+        this.feedbackGroup = createFeedbackGroup(root);
     }
     
     public ValidatorService build() {
         scanComponents(root);
         root.putClientProperty(ValidationConstants.COMPONENT_VALIDATOR, this);
-        root.putClientProperty(ValidationConstants.COMPONENT_FEEDBACK, this);
+        root.putClientProperty(ValidationConstants.COMPONENT_FEEDBACK, feedbackGroup);
         return this;
     }
-
+    
+    protected FeedbackGroup createFeedbackGroup(JComponent root) {
+        return new FeedbackGroup(root);
+    }
+    
     @Override
     public ValidationResult getValidation() {
         return result;
@@ -139,7 +133,7 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
     public synchronized void removeChangeListener(ChangeListener l) {
         listeners.remove(l);
     }
-
+    
     @Override
     public void attach(Lookup context) {
         this.context = context;
@@ -241,18 +235,6 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
             return this;
         }
         
-        public boolean test(Object key) {
-            if (keys.contains(key)) {
-                return true;
-            }
-            for (ValidationMessage msg : partialResult) {
-                if (keys.contains(msg.key())) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
         public String toString() {
             StringBuilder sb = new StringBuilder();
             
@@ -274,48 +256,34 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
         return service;
     }
 
-    @Override
-    public Collection<Object> getKeys() {
-        if (cachedKeys != null) {
-            return cachedKeys;
-        }
-        Set<Object> obs = new HashSet<>();
-        components.values().forEach((e) -> {
-            e.feedbacks.forEach((f) -> obs.addAll(f.getKeys()));
-        });
-        cachedKeys = obs;
-        return obs;
-    }
-    
     private ValidatorService extractValidatorService(JComponent jc) {
-        Object o = jc.getClientProperty(ValidationConstants.COMPONENT_VALIDATOR);
-        if (o == null) {
-            return null;
-        }
-        LOG.debug("Processing validator on {}: {}", jc, o);
+        Object o = jc.getClientProperty(ValidationConstants.COMPONENT_VALIDATOR_SERVICE);
         ValidatorService srv = null;
         AtomicReference<Component> r = new AtomicReference<>();
+        
         if (o instanceof ValidatorService) {
-            LOG.debug("Found ValidatorService");
             srv = (ValidatorService)o;
-        } else if (o instanceof Validator) {
-            LOG.debug("Found Validator");
-            srv = createDefaultService(jc, (Validator)o, r);
-        } 
+        } else {
+            o = jc.getClientProperty(ValidationConstants.COMPONENT_VALIDATOR);
+            if (o == null) {
+                return null;
+            }
+            LOG.debug("Processing validator on {}: {}", jc, o);
+            if (o instanceof ValidatorService) {
+                LOG.debug("Found ValidatorService");
+                srv = (ValidatorService)o;
+            } else if (o instanceof Validator) {
+                LOG.debug("Found Validator");
+                srv = createDefaultService(jc, (Validator)o, r);
+            } 
+        }
         if (srv == null) {
             return null;
         }
-        Set<Object> keys;
-        Object key = jc.getClientProperty(ValidationConstants.COMPONENT_VALIDATION_KEY);
-        if (key == null) {
-            keys = Collections.singleton(jc);
-        } else if (key instanceof Collection) {
-            keys = new HashSet<>((Collection)key);
-        } else if (key instanceof Object[]) {
-            keys = new HashSet<>(Arrays.asList((Object[])key));
-        } else {
-            keys = Collections.singleton(key);
-        }
+        
+        Set<Object> keys = ValidationUtils.getOneOrMoreItems(
+                jc.getClientProperty(ValidationConstants.COMPONENT_VALIDATION_KEY),
+                null);
         LOG.debug("Component identified by keys: {}", keys);
         Entry e = new Entry(jc, srv, keys).setValidationTarget(r.get());
         for (Object x : keys) {
@@ -339,7 +307,7 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
         }
         LOG.debug("Custom feedback keys: {}", keys);
         keys.forEach((k) -> registerFeedback(k, jc, feedback));
-        
+        feedbackGroup.add(feedback);
         return feedback;
     }
         
@@ -362,15 +330,22 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
         if (o == null || !(jc instanceof JLabel)) {
             return null;
         }
+        Set<Object> keys = null;
         JLabel l = (JLabel)jc;
         Component target = l.getLabelFor();
         if (target == null || !(target instanceof JComponent)) {
             return null;
         }
-        LOG.debug("Marked as validator-icon: {} for {1}", jc, target);
         JComponent tc = (JComponent)target;
+
+        if (Boolean.TRUE.equals(o)) {
+            keys = ValidationUtils.getOneOrMoreItems(tc.getClientProperty(ValidationConstants.COMPONENT_VALIDATION_KEY), null);
+        } else {
+            keys = ValidationUtils.getOneOrMoreItems(o, null);
+        }
+        LOG.debug("Marked as validator-icon: {} for {1}", jc, target);
         Entry e = findEntry(tc);
-        if (e == null || e.keys.isEmpty()) {
+        if (e == null || (e.keys.isEmpty() && keys == null)) {
             return null;
         }
         
@@ -380,7 +355,8 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
         LOG.debug("Registered as placeholder");
         e.iconPlaceholder = l;
         
-        ValidationFeedback fb = new DefaultIconFeedback(l, e.keys);
+        ValidationFeedback fb = new DefaultIconFeedback(l, keys);
+        feedbackGroup.add(fb);
         e.feedbacks.add(fb);
         
         return fb;
@@ -390,64 +366,29 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
         return components.get(jc);
     }
     
-    private Set<JComponent> rescanFound;
-    
-    private void scanComponentTree(Container parent, Predicate<JComponent> processor) {
-        if (level == 0) {
-            rescanFound = new HashSet<>();
-        }
-        level++;
-        try {
-            for (Component c : parent.getComponents()) {
-                if (c == null) {
-                    continue;
-                }
-                if (!(c instanceof JComponent) && acceptor.test(c)) {
-                    continue;
-                }
-                JComponent jc = (JComponent)c;
-                rescanFound.add(jc);
-                if (components.containsKey(jc)) {
-                    continue;
-                }
-                if (processor.test(jc)) {
-                    continue;
-                }
-                if (c instanceof Container) {
-                    Container owner = (Container)c;
-                    if (owner.getComponentCount() > 0) {
-                        scanComponents((Container)c);
-                    }
-                }
-            }
-        } finally {
-            level--;
-        }
-        
-        if (level == 0) {
-            // remove potential components NOT found:
-            Set<JComponent> registered = new HashSet<>(components.keySet());
-            registered.removeAll(rescanFound);
-            detach(registered);
-        }
-    }
-    
-    private int level;
-    
     private void scanComponents(Container parent) {
-        LOG.debug("Scanning for validatable components in {}", parent);
-        scanComponentTree(parent, (c) -> {
-            LOG.debug("Inspecting: {}", c);
-            JComponent jc = (JComponent)c;
-            boolean a = extractValidatorService(jc) != null;
-            attachFeedbackService(jc);
-            return a;
-        });
-        LOG.debug("Scanning for feedback in {}", parent);
-        scanComponentTree(parent, (c) -> {
-            attachIconHolder(c);
-            return components.containsKey(c);
-        });
+        ComponentTreeScanner cts = new ComponentTreeScanner() {
+            @Override
+            protected void scanComponents(Container parent) {
+                LOG.debug("Scanning for validatable components in {}", parent);
+                scanComponentTree(parent, (c) -> {
+                    LOG.debug("Inspecting: {}", c);
+                    JComponent jc = (JComponent)c;
+                    boolean a = extractValidatorService(jc) != null;
+                    attachFeedbackService(jc);
+                    return a;
+                });
+                LOG.debug("Scanning for feedback in {}", parent);
+                scanComponentTree(parent, (c) -> {
+                    attachIconHolder(c);
+                    return components.containsKey(c);
+                });
+            }
+        };
+        
+        cts.fromExisting(components.keySet()).
+            withAcceptor(acceptor).scanComponents(parent);
+        detach(cts.removedComponents());
     }
     
     private void detach(Collection<JComponent> unregister) {
@@ -466,92 +407,6 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
         fbs.forEach(fb -> fb.removeNotify());
     }
     
-    private Map<Object, List<ValidationMessage>> splitMessages(ValidationResult result) {
-        Map<Object, List<ValidationMessage>> messages = new HashMap<>();
-        for (ValidationMessage msg : result) {
-            Object o = msg.key();
-            Component c = findComponent(o);
-            if (c == null) {
-                continue;
-            }
-            Entry e = findEntry((JComponent)c);
-            if (e == null) {
-                continue;
-            }
-            messages.computeIfAbsent(o, (x) -> new ArrayList<>());
-        }
-        return messages;
-    }
-    
-    @Override
-    public void indicateResult(ValidationResult result) {
-        forwardPartialResults(result, (f, r) -> {
-            f.indicateResult(r);
-            return null;
-        });
-    }
-    
-    private Collection<ValidationFeedback> getAllFeedbacks() {
-        return components.values().stream().flatMap(e -> e.feedbacks.stream()).collect(Collectors.toSet());
-    }
-    
-    private boolean forwardPartialResults(ValidationResult result, BiFunction<ValidationFeedback, ValidationResult, Boolean> delegate) {
-        Collection<ValidationFeedback> remainder = getAllFeedbacks();
-        Map<ValidationFeedback, Set<ValidationMessage>> messageSets = new HashMap<>();
-        List<ValidationMessage> allMessages = result.getMessages();
-        for (Entry e : components.values()) {
-            Set<ValidationMessage> mset = new LinkedHashSet<>();
-            Set keys = new HashSet<>(e.keys);
-            e.feedbacks.forEach(f -> {
-                Set fk = keys;
-                if (!fk.containsAll(f.getKeys())) {
-                    fk = new HashSet<>(fk);
-                    fk.addAll(f.getKeys());
-                }
-                for (ValidationMessage m : allMessages) {
-                    if (fk.contains(m.key())) {
-                        messageSets.computeIfAbsent(f, (f2) -> new LinkedHashSet<>()).add(m);
-                        remainder.remove(f);
-                    }
-                }
-            });
-        }
-        boolean allOK = true;
-        for (ValidationFeedback f : messageSets.keySet()) {
-            ValidationResult forward = new ValidationResult();
-            forward.addAll(new ArrayList<>(messageSets.get(f)));
-            if (Boolean.FALSE.equals(delegate.apply(f, forward))) {
-                allOK = false;
-            }
-        }
-        remainder.stream().forEach(f -> delegate.apply(f, ValidationResult.EMPTY));
-        return allOK;
-    }
-
-    @Override
-    public boolean reportMessages(ValidationResult result) {
-        forwardPartialResults(result, ValidationFeedback::reportMessages);
-        return true;
-    }
-
-    @Override
-    public Action transferControl(Object key) {
-        return null;
-    }
-    
-    private void processValidatorsAndFeedbacks(Consumer<SwingAttached> callback) {
-        for (Entry e : components.values()) {
-            ValidatorService val = e.validator;
-            if (val != null) {
-                callback.accept(val);
-            }
-            for (ValidationFeedback fb : e.feedbacks) {
-                if (fb != val) {
-                    callback.accept(fb);
-                }
-            }
-        }
-    }
     
     private int addCounter;
 
@@ -561,14 +416,23 @@ public class PanelValidationSupport implements ValidatorService, ContextValidato
             if (!initialized) {
                 build();
             }
-            processValidatorsAndFeedbacks(SwingAttached::addNotify);
+            feedbackGroup.addNotify();
+            processValidators(SwingAttached::addNotify);
         }
     }
-
+    
     @Override
     public void removeNotify() {
         if (--addCounter == 0) {
-            processValidatorsAndFeedbacks(SwingAttached::removeNotify);
+            processValidators(SwingAttached::removeNotify);
         }
     }
-}
+
+    private void processValidators(Consumer<SwingAttached> callback) {
+        for (Entry e : components.values()) {
+            ValidatorService val = e.validator;
+            if (val != null) {
+                callback.accept(val);
+            }
+        }
+    }}

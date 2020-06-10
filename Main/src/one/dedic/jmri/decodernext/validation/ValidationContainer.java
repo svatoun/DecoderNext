@@ -16,7 +16,7 @@ import javax.swing.JComponent;
  * 
  * @author sdedic
  */
-public interface ValidationContainer<T extends SwingAttached> {
+public interface ValidationContainer<T> {
     /**
      * Attaches a child to the parent service. If the service is already
      * active, it will call {@link SwingAttached#addNotify} back on the

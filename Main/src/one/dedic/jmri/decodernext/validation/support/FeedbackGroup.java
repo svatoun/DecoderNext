@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -123,25 +124,28 @@ public class FeedbackGroup implements ValidationFeedback, ValidationContainer<Va
     }
     
     private ValidationResult forwardPartialResults(ValidationResult result, BiFunction<ValidationFeedback, ValidationResult, Boolean> delegate) {
+        Collection<ValidationFeedback> remainder = new HashSet<>(this.items);
         Map<ValidationFeedback, Set<ValidationMessage>> messageSets = new HashMap<>();
         List<ValidationMessage> allMessages = result.getMessages();
         for (ValidationFeedback f : items) {
-            Set<ValidationMessage> mset = new LinkedHashSet<>();
             for (ValidationMessage m : allMessages) {
                 if (f.getKeys().contains(m.key())) {
                     messageSets.computeIfAbsent(f, (f2) -> new LinkedHashSet<>()).add(m);
+                    remainder.remove(f);
                 }
             }
         }
+        
         List<ValidationMessage> leftovers = new ArrayList<>();
         for (ValidationFeedback f : messageSets.keySet()) {
             ValidationResult forward = new ValidationResult();
             Collection<ValidationMessage> msgs = messageSets.get(f);
             forward.addAll(new ArrayList<>(msgs));
-            if (Boolean.TRUE != delegate.apply(f, forward)) {
+            if (Boolean.FALSE.equals(delegate.apply(f, forward))) {
                 leftovers.addAll(msgs);
             }
         }
+        remainder.stream().forEach(f -> delegate.apply(f, ValidationResult.EMPTY));
         if (leftovers.isEmpty()) {
             return ValidationResult.EMPTY;
         }
@@ -189,9 +193,23 @@ public class FeedbackGroup implements ValidationFeedback, ValidationContainer<Va
 
     @Override
     public void attachChild(JComponent ui, ValidationFeedback child) {
+        items.add(child);
+        if (active) {
+            child.addNotify();
+        }
+        synchronized (this) {
+            itemKeys = null;
+        }
     }
 
     @Override
     public void dettachChild(JComponent ui, ValidationFeedback child) {
+        if (active) {
+            child.removeNotify();
+        }
+        items.remove(child);
+        synchronized (this) {
+            itemKeys = null;
+        }
     }
 }

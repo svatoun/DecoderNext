@@ -7,6 +7,7 @@ package one.dedic.jmri.roster.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.io.Externalizable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import jmri.jmrit.roster.RosterEntry;
 import one.dedic.jmri.roster.detail.EntryModel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.OpenSupport;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -34,9 +36,10 @@ import org.openide.windows.CloneableTopComponent;
  *
  * @author sdedic
  */
-public class DecoderTopComponent extends CloneableTopComponent implements LookupListener {
+public class DecoderTopComponent extends CloneableTopComponent implements LookupListener, Externalizable {
     private final InstanceContent lookupContent;
-    
+    private OpenSupport.Env env;
+   
     /**
      * The roster file.
      */
@@ -49,7 +52,7 @@ public class DecoderTopComponent extends CloneableTopComponent implements Lookup
     private RosterEntry rosterEntry;
     
     private EntryModel  model;
-
+    
     /**
      * Constructor for deserialization only
      */
@@ -68,8 +71,9 @@ public class DecoderTopComponent extends CloneableTopComponent implements Lookup
         }
     };
     
-    public DecoderTopComponent(FileObject rosterFile, RosterEntry entry) {
+    public DecoderTopComponent(FileObject rosterFile, RosterEntry entry, OpenSupport.Env env) {
         this();
+        this.env = env;
         this.rosterEntry = entry;
         this.rosterFile = rosterFile;
         rosterEntryConnected();
@@ -139,6 +143,7 @@ public class DecoderTopComponent extends CloneableTopComponent implements Lookup
         } else {
             throw new FileNotFoundException(filePath);
         }
+        env = (OpenSupport.Env)in.readObject();
         maybeConnect();
     }
 
@@ -148,5 +153,6 @@ public class DecoderTopComponent extends CloneableTopComponent implements Lookup
         
         // write the file's path as the identification.
         out.writeUTF(rosterFile.getPath());
+        out.writeObject(env);
     }
 }

@@ -8,6 +8,11 @@ package one.dedic.jmri.decodernext.validation;
 import com.jgoodies.validation.Validatable;
 import com.jgoodies.validation.Validator;
 import java.awt.Component;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JComponent;
 
 /**
@@ -15,6 +20,21 @@ import javax.swing.JComponent;
  * @author sdedic
  */
 public class ValidationUtils {
+    
+    public static Set<Object> getOneOrMoreItems(Object data, Object defValue) {
+        if (data == null) {
+            if (defValue == null) {
+                return null;
+            }
+            return Collections.singleton(defValue);
+        } else if (data instanceof Collection) {
+            return new HashSet<>((Collection)data);
+        } else if (data instanceof Object[]) {
+            return new HashSet<>(Arrays.asList((Object[])data));
+        } else {
+            return Collections.singleton(data);
+        }
+    }
     
     public static ValidationContainer<ValidationFeedback> findFeedbackContainer(JComponent start) {
         return findValidatorContainer(start, ValidationConstants.COMPONENT_FEEDBACK);

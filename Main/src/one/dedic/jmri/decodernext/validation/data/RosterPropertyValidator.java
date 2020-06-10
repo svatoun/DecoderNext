@@ -112,33 +112,36 @@ public class RosterPropertyValidator implements ValidatorSetup, ContextValidator
         String s = o.toString().trim();
         boolean found = false;
         for (RosterEntry en : roster.getAllEntries()) {
-            String n = en.getId();
+            String n = extractor.apply(en);
             if (n == null) {
-                return null;
+                continue;
             } else {
                 n = n.trim();
             }
             if ("".equals(n)) {
-                return null;
+                continue;
             }
             boolean match = ignoreCase ? s.equalsIgnoreCase(n) : s.equals(n);
-            if (match && (en != entry && !Objects.equals(entry.getId(), en.getId()))) {
-                if (unique) {
-                    return new ValidationResult().
-                            add(warnDuplicate ?
-                                    new SimpleValidationMessage(
-                                        label == null ? 
-                                            Bundle.ValidationError_WarnShouldBeUnique(s) : 
-                                            Bundle.ValidationError_WarnShouldBeUnique2(label, s), 
-                                        Severity.WARNING, messageKey) :
-                                    new SimpleValidationMessage(
-                                        label == null ? 
-                                            Bundle.ValidationError_ValueIsUsed(s): 
-                                            Bundle.ValidationError_ValueIsUsed2(label, s), 
-                                        Severity.ERROR, messageKey)
-                            );
-                } else {
-                    return null;
+            if (match) {
+                found = true;
+                if (en != entry && !Objects.equals(entry.getId(), en.getId())) {
+                    if (unique) {
+                        return new ValidationResult().
+                                add(warnDuplicate ?
+                                        new SimpleValidationMessage(
+                                            label == null ? 
+                                                Bundle.ValidationError_WarnShouldBeUnique(s) : 
+                                                Bundle.ValidationError_WarnShouldBeUnique2(label, s), 
+                                            Severity.WARNING, messageKey) :
+                                        new SimpleValidationMessage(
+                                            label == null ? 
+                                                Bundle.ValidationError_ValueIsUsed(s): 
+                                                Bundle.ValidationError_ValueIsUsed2(label, s), 
+                                            Severity.ERROR, messageKey)
+                                );
+                    } else {
+                        return null;
+                    }
                 }
             }
         }

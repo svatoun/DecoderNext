@@ -95,28 +95,34 @@
               <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
               <Component id="lModelCaption" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lID" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="id" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="stID" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="stID" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lID" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="id" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="roadName" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lRoadName" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="stRoadName" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lManufacturer" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="manufacturer" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="stManufacturer" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="stRoadName" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="roadName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lRoadName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lManufacturer" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="manufacturer" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="stManufacturer" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="roadNumber" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lRoadNumber" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="stRoadNumber" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lType" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="type" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="stModelType" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="stRoadNumber" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="stModelType" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="roadNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lRoadNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lType" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="type" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -124,10 +130,12 @@
                   <Component id="descriptionScroll" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="owner" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lOwner" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="stOwner" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="stOwner" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="owner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lOwner" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">

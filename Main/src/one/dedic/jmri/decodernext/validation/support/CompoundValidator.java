@@ -13,7 +13,7 @@ import one.dedic.jmri.decodernext.validation.ContextValidator;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Combines several validators, collects messages from all of them.
  * @author sdedic
  */
 public class CompoundValidator implements Validator, ContextValidator {

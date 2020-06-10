@@ -5,10 +5,14 @@
  */
 package one.dedic.jmri.decodernext.validation.data;
 
+import javax.swing.JComponent;
+import org.openide.util.Lookup;
+
 /**
- * Can listen for control changes in an abstract way.
+ * An extensible factory to create change monitors for various
+ * types of control.
  * @author sdedic
  */
-public interface ControlChangeListener {
-    public void controlChanged(ControlChangeEvent e);
+public interface ControlChangeProvider {
+    public ControlChangeMonitor  create(JComponent control, Lookup context);
 }

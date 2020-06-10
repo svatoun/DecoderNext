@@ -9,7 +9,7 @@ import java.util.EventObject;
 import javax.swing.JComponent;
 
 /**
- *
+ * Information on the changed control.
  * @author sdedic
  */
 public class ControlChangeEvent extends EventObject {
