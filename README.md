@@ -20,5 +20,4 @@ Primary usage scenarios for DecoderNext:
 - programming of rolling stock and accessory decoders.
 - reading / troubleshooting of decoders.
 
-Portions of the project could be eventually donated back, and are intentionally written as portable as possible, especially some UI controls or snippets. But there's a strong pushback for any ideas or changes since the current UI is seen as optimal by JMRI developer social bubble. There's a strong "not invented here". Good luck.
-
+Portions of the project could be eventually donated back, and should be written as portable as possible, especially some UI controls or snippets. But there's a strong pushback for any ideas or changes since the current UI is seen as optimal by JMRI developer social bubble, so it may not be worth the effort.
