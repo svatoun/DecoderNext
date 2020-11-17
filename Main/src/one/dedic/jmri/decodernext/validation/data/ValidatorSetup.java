@@ -9,7 +9,7 @@ import com.jgoodies.validation.Validator;
 
 /**
  * Interface for common setup for a validator. Most of validators may print generic messages, but they
- * finally need a displau name (label) of the validated entry. They also need a key
+ * finally need a display name (label) of the validated entry. They also need a key
  * for the produced messages to pair with the visual feedback component(s).
  * 
  * @author sdedic

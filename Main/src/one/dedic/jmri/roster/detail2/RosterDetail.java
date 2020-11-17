@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package one.dedic.jmri.roster.detail;
+package one.dedic.jmri.roster.detail2;
 
+import one.dedic.jmri.decodernext.ui.controls.ComboBoxCompleter;
+import one.dedic.jmri.roster.detail.*;
 import one.dedic.jmri.decodernext.ui.ExplicitLayoutFocusPolicy;
 import java.awt.Component;
 import java.awt.FocusTraversalPolicy;
@@ -33,7 +35,7 @@ import one.dedic.jmri.decodernext.validation.ValidatorService;
  * @author sdedic
  */
 public class RosterDetail extends javax.swing.JPanel {
-    private final EntryModel model;
+    private final RosterEntryModel model;
     private final RosterEntry entry;
     private Roster roster;
     
@@ -50,7 +52,7 @@ public class RosterDetail extends javax.swing.JPanel {
     /**
      * Creates new form RosterDetail
      */
-    public RosterDetail(EntryModel model) {
+    public RosterDetail(RosterEntryModel model) {
         this.model = model;
         this.entry = model.getEntry();
         initComponents();

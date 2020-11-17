@@ -881,7 +881,6 @@
                 <runtime-relative-path>../jmri/lib/libusb4java-1.3.0-linux-x86-64.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                                                   libusb4java-1.3.0-linux-x86.jar
                 <runtime-relative-path>../jmri/lib/libusb4java-1.3.0-linux-x86.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
