@@ -6,4 +6,6 @@
 /*/build/
 /*/dist/
 /*/release/
+/*/external/*.jar
 /*/nbproject/private/
+/TestModule/target/

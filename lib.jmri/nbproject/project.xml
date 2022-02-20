@@ -755,14 +755,9 @@
                 <package>com.sun.jna</package>
                 <package>com.sun.jna.platform</package>
             </public-packages>
-            <!--
+
             <class-path-extension>
-                <runtime-relative-path>ext/jmri.jar</runtime-relative-path>
-                <binary-origin>${jmri.jar.location}</binary-origin>
-            </class-path-extension>
-            -->
-            <class-path-extension>
-                <runtime-relative-path>../jmri/lib/jmri.jar</runtime-relative-path>
+                <runtime-relative-path>../jmri/jmri.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../jmri/lib/AppleJavaExtensions.jar</runtime-relative-path>

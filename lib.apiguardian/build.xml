@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="one.dedic.lib.apiguardian" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project one.dedic.lib.apiguardian.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+    <property name="nbantext.jar" location="${harness.dir}/tasks.jar"/>
+
+    <target name="-define-downloadbinaries-task" unless="have-downloadbinaries-task">
+        <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${nbantext.jar}"/>
+    </target>
+    
+    <target name="-define-FileCRC32Calculator">
+        <taskdef name="FileCRC32Calculator" classname="org.netbeans.nbbuild.FileCRC32Calculator" classpath="${nbantext.jar}"/>
+    </target>
+    
+    <target name="-release.files" depends="-download.release.files,projectized-common.-release.files">
+        <mkdir dir="${basedir}/release/modules/ext"/>
+        <copy file="${basedir}/external/apiguardian-api-1.1.1.jar" todir="release/modules/ext"/>
+    </target>
+    
+    <target name="-process.release.files" depends="-download.release.files"/>
+    
+    <target name="-download.release.files" depends="-define-downloadbinaries-task">
+        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+            <manifest dir=".">
+                <include name="external/binaries-list"/>
+            </manifest>
+        </downloadbinaries>
+    </target>
+
+</project>

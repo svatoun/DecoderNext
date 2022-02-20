@@ -19,7 +19,7 @@
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -34,18 +34,18 @@
                                   </Group>
                                   <Component id="lNotes" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="descriptionScroll" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="owner" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="roadNumber" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="roadName" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="id" linkSize="2" alignment="0" pref="239" max="32767" attributes="0"/>
-                                          <Component id="decoderFamily" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="owner" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="roadNumber" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="roadName" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="id" alignment="0" pref="239" max="32767" attributes="0"/>
+                                          <Component id="decoderFamily" alignment="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="stOwner" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="stRoadNumber" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -58,16 +58,16 @@
                                           <Component id="lType" alignment="0" max="32767" attributes="0"/>
                                           <Component id="lModel" alignment="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="decoderModel" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="type" linkSize="3" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="manufacturer" linkSize="3" alignment="0" pref="200" max="32767" attributes="0"/>
+                                          <Component id="type" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="manufacturer" alignment="0" pref="200" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Component id="notesScroll" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="stManufacturer" min="-2" max="-2" attributes="0"/>
                                   <Component id="stModelType" min="-2" max="-2" attributes="0"/>

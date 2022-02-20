@@ -11,10 +11,11 @@
         <mkdir dir="${cluster}/jmri/xml"/>
         <mkdir dir="${cluster}/jmri/resources"/>
         <mkdir dir="${cluster}/jmri/jython"/>
-        <copy file="${jmri.jar.location}" todir="${cluster}/jmri/lib"/>
+        <copy file="${jmri.jar.location}" todir="${cluster}/jmri"/>
         <copy todir="${cluster}/jmri/lib">
             <fileset dir="${jmri.libs.location}">
                 <include name="*.jar"/>
+                <exclude name="jmri.jar"/>
             </fileset>
         </copy>
         <copy todir="${cluster}/jmri/help">
