@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package one.dedic.jmri.decodernext.model.formx.validation;
+package one.dedic.jmri.decodernext.forms.api.validation;
 
 import com.jgoodies.validation.ValidationResult;
 import java.util.EventObject;

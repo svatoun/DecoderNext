@@ -5,10 +5,9 @@
  */
 package one.dedic.jmri.decodernext.forms.api.input;
 
-import one.dedic.jmri.decodernext.model.formx.model.*;
-import one.dedic.jmri.decodernext.model.formx.model.DataItem;
 import java.util.Collection;
 import java.util.EventObject;
+import one.dedic.jmri.decodernext.forms.api.model.DataItem;
 
 /**
  *
@@ -17,17 +16,18 @@ import java.util.EventObject;
 public final class InputContextEvent extends EventObject {
     private Collection<DataItem>    affectedItems;
     
-    public InputContextEvent(DefaultInputContext source) {
+    public InputContextEvent(InputContext source) {
         super(source);
     }
 
-    public InputContextEvent(DefaultInputContext source, Collection<DataItem> items) {
+    public InputContextEvent(InputContext source, Collection<DataItem> items) {
         super(source);
         this.affectedItems = items;
     }
 
-    public DefaultInputContext getSource() {
-        return (DefaultInputContext)source;
+    @Override
+    public InputContext getSource() {
+        return (InputContext)source;
     }
 
     public Collection<DataItem> getAffectedItems() {

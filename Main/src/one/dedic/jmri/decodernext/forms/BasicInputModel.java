@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package one.dedic.jmri.decodernext.model.formx.support;
+package one.dedic.jmri.decodernext.forms;
 
 import one.dedic.jmri.decodernext.jgoodies.ValueWeakListener;
 import com.jgoodies.binding.value.ValueModel;
@@ -11,8 +11,10 @@ import com.jgoodies.common.bean.Bean;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.CompletableFuture;
-import one.dedic.jmri.decodernext.model.formx.model.BufferedModel;
-import one.dedic.jmri.decodernext.model.formx.model.DataInputException;
+import one.dedic.jmri.decodernext.forms.api.model.BufferedModel;
+import static one.dedic.jmri.decodernext.forms.api.model.BufferedModel.PROP_DIRTY;
+import one.dedic.jmri.decodernext.forms.api.model.DataInputException;
+import one.dedic.jmri.decodernext.forms.api.model.ModelUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +95,7 @@ public class BasicInputModel<T> extends Bean implements ValueModel, BufferedMode
         }
     }
     
-    
+    @SuppressWarnings("unchecked")
     protected void forwardToInput(PropertyChangeEvent evt) {
         if (!ValueModel.PROPERTY_VALUE.equals(evt.getPropertyName())) {
             return;
@@ -164,23 +166,14 @@ public class BasicInputModel<T> extends Bean implements ValueModel, BufferedMode
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T getPendingValue() {
-        ValueModel m = inputModel;
-        if (m instanceof BufferedModel) {
-            return (T)((BufferedModel)m).getPendingValue();
-        } else {
-            return (T)dataModel.getValue();
-        }
+        return (T)ModelUtilities.getPendingValue(inputModel);
     }
 
     @Override
-    public CompletableFuture<Object> getTargetValue() {
-        ValueModel m = inputModel;
-        if (m instanceof BufferedModel) {
-            return ((BufferedModel)m).getTargetValue();
-        } else {
-            return CompletableFuture.completedFuture(dataModel.getValue());
-        }
+    public CompletableFuture<Object> getTargetValue(boolean allowSpecial) {
+        return ModelUtilities.getTargetValue(inputModel, allowSpecial);
     }
     
     private void forwardToData0() {

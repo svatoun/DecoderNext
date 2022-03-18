@@ -5,7 +5,6 @@
  */
 package one.dedic.jmri.decodernext.forms.api.input;
 
-import one.dedic.jmri.decodernext.model.formx.model.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,7 +16,10 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
+import one.dedic.jmri.decodernext.forms.api.model.DataItem;
+import one.dedic.jmri.decodernext.forms.api.model.FormEntry;
 import one.dedic.jmri.decodernext.forms.spi.model.NamedBeanLocator;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
@@ -29,7 +31,7 @@ import org.openide.util.lookup.InstanceContent;
  * 
  * @author sdedic
  */
-public final class DefaultInputContext<T> {
+public final class DefaultInputContext implements InputContext {
     /**
      * Services provided to UI/data in the context.
      */
@@ -38,10 +40,12 @@ public final class DefaultInputContext<T> {
     /**
      * The main edited bean.
      */
-    private final T masterBean;
+    private final Object masterBean;
     
     private List<NamedBeanLocator> namedLocators = new ArrayList<>();
     private Map<String, Object> namedBeans = new HashMap<>();
+    private Map<String, Set<String>> aliases = new HashMap<>();
+    private Map<String, FormEntry> entries = new HashMap<>();
     
     private Executor    dataExecutor;
     private Executor    validationExecutor;
@@ -50,18 +54,41 @@ public final class DefaultInputContext<T> {
      * Set of disabled items
      */
     private Set<String> disabledItems = new HashSet<>();
+    
+    private List<InputContextListener> listeners = new ArrayList<>();
 
-    public DefaultInputContext(T masterBean, Lookup services) {
+    public DefaultInputContext(Object masterBean, Lookup services) {
         this.services = services;
         this.masterBean = masterBean;
     }
+
+    @Override
+    public void addObject(String id, Object subject, String... alternativeIds) {
+        synchronized (this) {
+            namedBeans.put(id, subject);
+            addObjectAlias(id, alternativeIds);
+        }
+    }
+
+    @Override
+    public void addObjectAlias(String id, String... aliases) {
+        synchronized (this) {
+            this.aliases.computeIfAbsent(id, x -> new HashSet<>()).addAll(Arrays.asList(aliases));
+        }
+    }
+
+    @Override
+    public void addInputContextListener(InputContextListener l) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void removeInputContextListener(InputContextListener l) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
     public boolean isEnabled(DataItem item) {
-        return !(
-            disabledItems.contains(item.id()) ||
-            disabledItems.contains(item.getDescriptor().getName())
-            
-        );
+        return !(disabledItems.contains(item.getDescriptor().getName()));
     }
     
     public <T> T lookup(Class<T> clazz) {
@@ -72,27 +99,39 @@ public final class DefaultInputContext<T> {
      * The main model for the input. The main model cannot be {@code null}.
      * @return the main model instance.
      */
-    public T getMasterBean() {
+    @Override
+    public Object getSubject() {
         return masterBean;
     }
     
     public void addNamedBean(String id, Object bean) {
         namedBeans.put(id, bean);
     }
+
+    @Override
+    public Lookup getLookup() {
+        return services;
+    }
     
-    public <T> T findNamedBean(String id) {
+    @Override
+    public <T> T findObject(String id) {
         Object o = namedBeans.get(id);
         if (o != null) {
             return (T)o;
         }
         for (NamedBeanLocator l : namedLocators) {
-            o = l.findNamedBean(this);
+            o = l.findNamedBean(id, this);
             if (o != null) {
                 namedBeans.put(id, o);
                 return (T)o;
             }
         }
         return null;
+    }
+
+    @Override
+    public Executor getValidationExecutor() {
+        return validationExecutor;
     }
 
     public final static class Control<T> {
@@ -146,10 +185,10 @@ public final class DefaultInputContext<T> {
     }
     
     /**
-     * Calls {@link InputContextAware#useInputContext} on passed instances. If the instance 
-     * is a {@link InputContextAware}, calls its {@link InputContextAware#useInputContext} directly.
+     * Calls {@link InputContextAware#withInputContext} on passed instances. If the instance 
+     * is a {@link InputContextAware}, calls its {@link InputContextAware#withInputContext} directly.
      * Otherwise, if the instance is a {@link Lookup} or a {@link Lookup.Provider}, looks up all
-     * {@link InputContextAware} instances in it and calls {@link InputContextAware#useInputContext} on them.
+     * {@link InputContextAware} instances in it and calls {@link InputContextAware#withInputContext} on them.
      * @param ctx
      * @param arr 
      */
@@ -169,7 +208,7 @@ public final class DefaultInputContext<T> {
                 continue;
             }
             if (o instanceof InputContextAware) {
-                ((InputContextAware)o).useInputContext(ctx);
+                ((InputContextAware)o).withInputContext(ctx);
             } else {
                 Lookup l;
 
@@ -180,7 +219,7 @@ public final class DefaultInputContext<T> {
                 } else {
                     return;
                 }
-                l.lookupAll(InputContextAware.class).forEach(a -> a.useInputContext(ctx));
+                l.lookupAll(InputContextAware.class).forEach(a -> a.withInputContext(ctx));
             }
         }
     }

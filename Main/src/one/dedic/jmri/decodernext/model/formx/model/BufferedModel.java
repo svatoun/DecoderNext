@@ -31,6 +31,7 @@ import java.util.concurrent.CompletableFuture;
  * @author sdedic
  */
 public interface BufferedModel extends ValueModel, DelegateModel {
+    public ValueModel getDelegate();
     /**
      * Represents 'dirty' state. When the model is 'dirty', the value is being
      * changed, but may not be ready yet.

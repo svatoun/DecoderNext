@@ -5,10 +5,9 @@
 package one.dedic.jmri.decodernext.forms.api.model;
 
 /**
- * Mixin interface that marks a model which transforms the value before returning
- * it.
+ *
  * @author sdedic
  */
-public interface TransformModel {
-    public Object transform(Object v);
+public interface Disposable {
+    public void dispose();
 }

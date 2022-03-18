@@ -21,9 +21,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import one.dedic.jmri.decodernext.model.formx.model.InputContext;
 import one.dedic.jmri.decodernext.model.formx.model.BufferedModel;
-import one.dedic.jmri.decodernext.model.formx.validation.Validated;
-import one.dedic.jmri.decodernext.model.formx.validation.ValidationEvent;
-import one.dedic.jmri.decodernext.model.formx.validation.ValidationListener;
 
 /**
  *
@@ -132,7 +129,7 @@ public class ValidationSupport implements Validated {
             }
             ll = listeners.toArray(new ValidationListener[listeners.size()]);
         }
-        ValidationEvent e = new ValidationEvent(this);
+        ValidationEvent e = new ValidationEvent(this, null);
         for (ValidationListener l : ll) {
             l.validationPending(e);
         }

@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package one.dedic.jmri.decodernext.forms.api.model;
 
@@ -10,22 +9,22 @@ import com.jgoodies.binding.beans.PropertyNotBindableException;
 import com.jgoodies.binding.value.AbstractValueModel;
 import com.jgoodies.binding.value.BindingConverter;
 import com.jgoodies.binding.value.ValueModel;
+import static com.jgoodies.binding.value.ValueModel.PROPERTY_VALUE;
+import com.jgoodies.validation.Severity;
+import com.jgoodies.validation.ValidationMessage;
+import com.jgoodies.validation.ValidationResult;
+import com.jgoodies.validation.message.SimpleValidationMessage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import one.dedic.jmri.decodernext.model.formx.model.BufferedModel;
+import one.dedic.jmri.decodernext.forms.api.validation.ValidationException;
+import static one.dedic.jmri.decodernext.model.formx.model.BufferedModel.PROP_DIRTY;
 
 /**
- * A ValueModel that uses {@link BindingConverter} to convert values. It forwards
- * Lookup to the underlying model. Also implements {@link BufferedModel}, so it can
- * indicate {@link BufferedModel#PROP_DIRTY} state after unsuccessful conversion from the
- * source.
- * 
+ *
  * @author sdedic
  */
-public class ConvertingBufferedModel extends AbstractValueModel implements BufferedModel {
+public class ConvertingModel extends AbstractValueModel implements DelegateModel, TransformModel {
 
     /**
      * Holds the ValueModel that in turn holds the source value.
@@ -37,10 +36,14 @@ public class ConvertingBufferedModel extends AbstractValueModel implements Buffe
      */
     private final BindingConverter converter;
     
+    private ErrorMessageProducer messageProducer;
+    
+    private String messageKey;
+    
     private PropertyChangeListener valueChangeHandler;
     
-    private volatile boolean conversionDirty;
-
+    private volatile ValidationException conversionError;
+    
     // Instance creation ******************************************************
 
     /**
@@ -51,14 +54,37 @@ public class ConvertingBufferedModel extends AbstractValueModel implements Buffe
      * @param converter   converts source values to target values and vice versa
      * @throws NullPointerException if {@code source} is {@code null}
      */
-    public ConvertingBufferedModel(ValueModel source, BindingConverter converter) {
+    public ConvertingModel(ValueModel source, BindingConverter converter) {
         this.source = source;
         this.converter = converter;
+    }
+
+    public ErrorMessageProducer getMessageProducer() {
+        return messageProducer;
+    }
+
+    public ConvertingModel setMessageProducer(ErrorMessageProducer messageProducer) {
+        this.messageProducer = messageProducer;
+        return this;
+    }
+
+    public String getMessageKey() {
+        return messageKey;
+    }
+
+    public ConvertingModel setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
+        return this;
     }
 
     @Override
     public ValueModel getDelegate() {
         return source;
+    }
+
+    @Override
+    public Object transform(Object v) {
+        return convertFromSubject(v);
     }
     
     @Override
@@ -118,9 +144,14 @@ public class ConvertingBufferedModel extends AbstractValueModel implements Buffe
     protected void handleRuntimeException(RuntimeException ex) {
         boolean od;
         synchronized (this) {
-            od = conversionDirty;
-            conversionDirty = true;
+            od = conversionError != null;
+            conversionError = createError(ex);
         }
+        if (od) {
+            throw ex;
+        }
+        // ... and fire a value change, so clients know to get the updated (erroneous) value
+        firePropertyChange(ValueModel.PROPERTY_VALUE, null, null);
         // superclass will check for equality
         firePropertyChange(PROP_DIRTY, od, true);
         throw ex;
@@ -128,49 +159,12 @@ public class ConvertingBufferedModel extends AbstractValueModel implements Buffe
 
     @Override
     public boolean isDirty() {
-        if (source instanceof BufferedModel) {
-            if (((BufferedModel)source).isDirty()) {
-                return true;
-            }
+        if (conversionError != null) {
+            return true;
         }
-        return conversionDirty;
+        return ModelUtilities.applyDelegates2(source, DelegateModel.class, DelegateModel::isDirty, false);
     }
 
-    @Override
-    public Object getPendingValue() {
-        if (source instanceof BufferedModel) {
-            try {
-                return convertFromSubject(((BufferedModel)source).getPendingValue());
-            } catch (IllegalArgumentException | IllegalStateException ex) {
-                handleRuntimeException(ex);
-                throw ex;
-            }
-        } else {
-            return getValue();
-        }
-    }
-
-    @Override
-    public CompletableFuture<Object> getTargetValue() {
-        if (source instanceof BufferedModel) {
-            CompletableFuture<Object> vf = ((BufferedModel)source).getTargetValue();
-            return vf.thenApply(this::convertFromSubject).handle((v, ex) -> {
-                if (ex != null) {
-                    if (ex instanceof RuntimeException) {
-                        handleRuntimeException((RuntimeException)ex);
-                    } 
-                    throw new CompletionException(ex);
-                } else {
-                    return v;
-                }
-            });
-        } else {
-            return BufferedModel.getTargetValue(source);
-        }
-    }
-    
-    
-    
     // AbstractWrappedValueModel Behavior *************************************
 
     protected PropertyChangeListener createValueChangeHandler() {
@@ -209,6 +203,7 @@ public class ConvertingBufferedModel extends AbstractValueModel implements Buffe
                 return;
             }
             String s = evt.getPropertyName();
+            Exception err = null;
             if (PROPERTY_VALUE.equals(s)) {
                 if (evt.getOldValue() == null) {
                     convertedOldValue = null;
@@ -226,15 +221,14 @@ public class ConvertingBufferedModel extends AbstractValueModel implements Buffe
                     try {
                         convertedNewValue = convertFromSubject(evt.getNewValue());
                     } catch (IllegalStateException | IllegalArgumentException ex) {
-                        convertedNewValue = null;
-                        newConversionDirty = true;
+                        err = ex;
                     }
                 }
             } else if (s == null) {
                 try {
                     convertedNewValue = convertFromSubject(source.getValue());
                 } catch (IllegalStateException | IllegalArgumentException ex) {
-                    convertedNewValue = null;
+                    err = ex;
                     newConversionDirty = true;
                 }
             } else {
@@ -243,14 +237,39 @@ public class ConvertingBufferedModel extends AbstractValueModel implements Buffe
                 return;
             }
             
+            if (err != null) {
+                convertedNewValue = null;
+                newConversionDirty = true;
+            }
+            
             boolean oc;
             synchronized (this) {
-                oc = conversionDirty;
-                conversionDirty = newConversionDirty;
+                oc = conversionError != null;
+                conversionError = createError(err);
             }
             firePropertyChange(PROP_DIRTY, oc, newConversionDirty);
             fireValueChange(convertedOldValue, convertedNewValue);
             lastEvent = evt;
         }
+    }
+    
+    private ValidationException createError(Exception orig) {
+        if (orig == null) {
+            return null;
+        }
+        if (orig instanceof ValidationException) {
+            return (ValidationException)orig;
+        }
+        Throwable t = orig.getCause();
+        if (t instanceof ValidationException) {
+            return (ValidationException)t;
+        }
+        EntryDescriptor desc = ModelUtilities.getModelDecription(source);
+        String s = messageProducer == null ? orig.getMessage() : messageProducer.createMessage(orig.getMessage(), orig, desc);
+        ValidationMessage msg = new SimpleValidationMessage(s, Severity.ERROR, 
+            desc != null ? desc.getName() : messageKey);
+        ValidationResult r = new ValidationResult().add(msg);
+        ValidationException ex = new ValidationException(r, orig);
+        return ex;
     }
 }

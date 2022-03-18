@@ -12,7 +12,7 @@ import com.jgoodies.validation.Validator;
  *
  * @author sdedic
  */
-public interface DataItem extends AbstractItem {
+public interface DataItem extends AbstractItem, HasDescription {
     /**
      * Description of the entry. Specializes {@link AbstractItem#getDescriptor()} in that
      * it can provide entry ID.
@@ -33,7 +33,7 @@ public interface DataItem extends AbstractItem {
      * Mandatory validator used to inspect the data represented by this item.
      * @return 
      */
-    public default Validator  getValidator() {
+    public default Validator<?>  getValidator() {
         return null;
     }
 }

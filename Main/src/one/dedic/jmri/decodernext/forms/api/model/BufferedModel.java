@@ -17,7 +17,8 @@ import java.util.concurrent.CompletableFuture;
  * The model can fire {@link #PROP_DIRTY} property change to indicate the value is being
  * changed, but is not ready yet. A {@link ValueModel#PROPERTY_VALUE} is fired when
  * the value finally changes. A A {@link ValueModel#PROPERTY_VALUE} can be fired with
- * {@code null} new value to indicate the value became unreadable.
+ * {@code null} new value to indicate the value became unreadable. Each {@link #PROP_DIRTY}
+ * must be followed by a {@link #PROPERTY_VALUE} change event, eventually.
  * Unreadable values cause {@link ValueModel#getValue} to fail.
  * <p>
  * The sequence of events with BufferedModel is:
@@ -37,15 +38,8 @@ public interface BufferedModel extends ValueModel, DelegateModel {
      */
     public static final String PROP_DIRTY = "dirty"; // NOI18N
     
-    public default void addPropertyChangeListener(String propName, PropertyChangeListener l) {
-        addPropertyChangeListener(l);
-    }
-    
     public void addPropertyChangeListener(PropertyChangeListener l);
     
-    public default void removePropertyChangeListener(String propName, PropertyChangeListener l) {
-        removePropertyChangeListener(l);
-    }
     public void removePropertyChangeListener(PropertyChangeListener l);
     
     /**
@@ -81,35 +75,7 @@ public interface BufferedModel extends ValueModel, DelegateModel {
      * 
      * @return future which becomes completed after the model is updated from the buffer.
      */
-    public default CompletableFuture<Object> getTargetValue() {
+    public default CompletableFuture<Object> getTargetValue(boolean allowSpecial) {
         return CompletableFuture.completedFuture(getValue());
-    }
-    
-    /**
-     * Helper method to get target value from a {@link ValueModel}.
-     * @param del
-     * @return 
-     */
-    public static CompletableFuture<Object> getTargetValue(ValueModel del) {
-        if (del == null) {
-            return null;
-        }
-        if (del instanceof BufferedModel) {
-            return ((BufferedModel)del).getTargetValue();
-        } else if (del instanceof DelegateModel) {
-            if (del instanceof TransformModel) {
-                return getTargetValue(((DelegateModel)del).getDelegate()).thenApply(((TransformModel)del)::transform);
-            } else {
-                return getTargetValue(((DelegateModel)del).getDelegate());
-            }
-        } else {    
-            CompletableFuture<Object> res = new CompletableFuture<>();
-            try {
-                res.complete(del.getValue());
-            } catch (IllegalArgumentException | IllegalStateException ex) {
-                res.completeExceptionally(ex);
-            }
-            return res;
-        }
     }
 }

@@ -5,18 +5,17 @@
  */
 package one.dedic.jmri.decodernext.forms.api.input;
 
-import one.dedic.jmri.decodernext.model.formx.model.*;
-
 /**
  *
  * @author sdedic
  */
-public interface InputContextAware {
+public interface InputContextAware<T> {
     /**
      * Sets up the input context. Should be called before the first functional method,
-     * ideally once. Must be called with the same ctx instance.
+     * ideally once. If called multiple times, must be called with the same ctx instance.
+     * Rebinding InputContext is not supported.
      * 
      * @param ctx the input context
      */
-    public void useInputContext(DefaultInputContext ctx);
+    public T withInputContext(InputContext ctx);
 }

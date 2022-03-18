@@ -86,7 +86,7 @@ public class DelayedInputModel extends AbstractValueModel implements BufferedMod
      *
      * @throws IllegalArgumentException if the delay is negative
      */
-    DelayedInputModel(ValueModel subject, int delay) {
+    public DelayedInputModel(ValueModel subject, int delay) {
         this(subject, delay, false);
     }
 
@@ -107,7 +107,7 @@ public class DelayedInputModel extends AbstractValueModel implements BufferedMod
      *
      * @see #setCoalesce(boolean)
      */
-    DelayedInputModel(ValueModel subject, int delay, boolean coalesce) {
+    public DelayedInputModel(ValueModel subject, int delay, boolean coalesce) {
         this.subject = subject;
         this.coalesce = coalesce;
         this.timer = new Timer(delay, new ValueUpdateListener());

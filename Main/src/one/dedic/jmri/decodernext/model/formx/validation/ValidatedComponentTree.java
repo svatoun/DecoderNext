@@ -102,7 +102,7 @@ public class ValidatedComponentTree implements Validated {
             pendingResult = new ValidationResult();
             result = new CompletableFuture<>();
         }
-        ValidationEvent e = new ValidationEvent(this);
+        ValidationEvent e = new ValidationEvent(this, CompletableFuture.completedFuture(null));
         ll.forEach(l -> l.validationPending(e));
     }
     

@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.util.concurrent.CompletableFuture;
 
 import javax.swing.Timer;
-import one.dedic.jmri.decodernext.model.formx.model.BufferedModel;
 import org.openide.util.Lookup;
 
 /**
@@ -35,7 +34,7 @@ import org.openide.util.Lookup;
  * 
  * @author sdedic
  */
-public class DelayedInputModel extends AbstractValueModel implements BufferedModel {
+public class DelayedInputModel extends AbstractValueModel implements BufferedModel, DelegateModel {
     private static final Object NONE = new Object();
     /**
      * Refers to the underlying subject ValueModel.
@@ -114,7 +113,7 @@ public class DelayedInputModel extends AbstractValueModel implements BufferedMod
         
         PropertyChangeListener l = new SubjectValueChangeHandler();
         if (subject instanceof BufferedModel) {
-            ((BufferedModel)subject).addPropertyChangeListener(PROP_DIRTY, l);
+            ((BufferedModel)subject).addPropertyChangeListener(l);
             subject.addValueChangeListener(l);
         } else {
             try {
@@ -376,17 +375,13 @@ public class DelayedInputModel extends AbstractValueModel implements BufferedMod
     }
 
     @Override
-    public CompletableFuture<Object> getTargetValue() {
+    public CompletableFuture<Object> getTargetValue(boolean allowSpecial) {
         synchronized (this) {
             if (this.pendingValue != null) {
                 return this.pendingValue;
             }
         }
-        if (subject instanceof BufferedModel) {
-            return ((BufferedModel)subject).getTargetValue();
-        } else {
-            return BufferedModel.getTargetValue(subject);
-        }
+        return ModelUtilities.getTargetValue(subject, allowSpecial);
     }
     
     

@@ -5,7 +5,6 @@
  */
 package one.dedic.jmri.decodernext.forms.api.input;
 
-import one.dedic.jmri.decodernext.model.formx.model.*;
 import java.util.EventListener;
 
 /**
@@ -13,6 +12,6 @@ import java.util.EventListener;
  * @author sdedic
  */
 public interface InputContextListener extends EventListener {
-    public void dataItemsAdded(InputContextEvent e);
-    public void dataItemsRemoved(InputContextEvent e);
+    public void itemsAdded(InputContextEvent e);
+    public void itemsRemoved(InputContextEvent e);
 }

@@ -279,7 +279,7 @@ public class ValidationController implements Validated {
         if (ll == null) {
             return;
         }
-        ValidationEvent ev = new ValidationEvent(this);
+        ValidationEvent ev = new ValidationEvent(this, CompletableFuture.completedFuture(null));
         for (ValidationListener l : ll) {
             l.validationPending(ev);
         }
@@ -297,7 +297,7 @@ public class ValidationController implements Validated {
             validationHandle = new CompletableFuture<>();
             ll = listeners.toArray(new ValidationListener[listeners.size()]);
         }
-        ValidationEvent ev = new ValidationEvent(this);
+        ValidationEvent ev = new ValidationEvent(this, CompletableFuture.completedFuture(null));
         for (ValidationListener l : ll) {
             l.validationPending(ev);
         }

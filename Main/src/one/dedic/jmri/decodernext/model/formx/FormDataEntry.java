@@ -174,7 +174,7 @@ public final class FormDataEntry extends BasicInputModel<Object> implements Form
             Collections.singletonList(val),
             context, getData());
         if (!res2.isDone()) {
-            executor.execute(() -> fireValidationPending());
+            executor.execute(() -> fireValidationPending(res));
         }
         res2.exceptionally(
                 (t) -> createThrowableResult(t)).
@@ -183,7 +183,7 @@ public final class FormDataEntry extends BasicInputModel<Object> implements Form
         return res;
     }
     
-    private void fireValidationPending() {
+    private void fireValidationPending(CompletableFuture<ValidationResult> r) {
         ValidationListener[] ll;
         synchronized (this) {
             if (pendingFired) {
@@ -195,7 +195,7 @@ public final class FormDataEntry extends BasicInputModel<Object> implements Form
             }
             ll = listeners.toArray(new ValidationListener[listeners.size()]);
         }
-        ValidationEvent e = new ValidationEvent(this);
+        ValidationEvent e = new ValidationEvent(this, r);
         for (ValidationListener l : ll) {
             l.validationPending(e);
         }
@@ -266,7 +266,7 @@ public final class FormDataEntry extends BasicInputModel<Object> implements Form
     }
 
     @Override
-    protected Object forwardToData(Object prev, Object v) {
+    public Object forwardToData(Object prev, Object v) {
         CompletableFuture<ValidationResult> res = doValidation();
         CompletableFuture<Object> newVal = res.thenApply((r) -> forwardToData(prev, r, v));
         return newVal.getNow(SUPPRESS);

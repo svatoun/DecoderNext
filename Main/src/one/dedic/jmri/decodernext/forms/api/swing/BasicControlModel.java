@@ -16,7 +16,10 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
+import one.dedic.jmri.decodernext.forms.api.input.InputContext;
+import one.dedic.jmri.decodernext.forms.api.input.InputContextAware;
 import one.dedic.jmri.decodernext.forms.api.ui.ExComponentModel;
+import org.openide.util.Lookup;
 
 /**
  * A ComponentModel implementation for basic Swing components. Allows to control
@@ -24,15 +27,49 @@ import one.dedic.jmri.decodernext.forms.api.ui.ExComponentModel;
  * 
  * @author sdedic
  */
-public class BasicControlModel<C extends JComponent> extends Bean implements ExComponentModel {
+public class BasicControlModel<C extends JComponent> extends Bean implements ExComponentModel, InputContextAware {
     private final C component;
     private final L compListener;
+    private InputContext icontext;
+    private Lookup lkp;
 
     private BasicControlModel(C component) {
         this.component = component;
         compListener = new L();
         component.addPropertyChangeListener(compListener);
         component.addComponentListener(compListener);
+    }
+
+    @Override
+    public Lookup getLookup() {
+        if (lkp != null) {
+            return lkp;
+        }
+        synchronized (this) {
+            if (lkp != null) {
+                return lkp;
+            }
+            Object o = component.getClientProperty(SwingFormUtils.CLIENTPROP_COMPONENT_LOOKUP);
+            if (o instanceof InputContextAware) {
+                ((InputContextAware)o).withInputContext(icontext);
+            }
+            if (o instanceof Lookup.Provider) {
+                lkp = ((Lookup.Provider)o).getLookup();
+            } else if (o instanceof Lookup) {
+                lkp = (Lookup)o;
+            } else {
+                lkp = Lookup.EMPTY;
+            }
+        }
+        return lkp;
+    }
+
+    @Override
+    public BasicControlModel withInputContext(InputContext ctx) {
+        synchronized (this) {
+            icontext = ctx;
+        }
+        return this;
     }
     
     public static <C extends JComponent> BasicControlModel<C> create(C component) {
@@ -46,6 +83,11 @@ public class BasicControlModel<C extends JComponent> extends Bean implements ExC
     @Override
     public boolean isEnabled() {
         return component.isEnabled();
+    }
+
+    @Override
+    public boolean isDisplayed() {
+        return component.isShowing();
     }
 
     @Override
@@ -108,11 +150,11 @@ public class BasicControlModel<C extends JComponent> extends Bean implements ExC
 
     @Override
     public boolean isActive() {
-        return component.isShowing();
+        return component.isShowing() && component.isFocusOwner();
     }
 
     @Override
-    public CompletableFuture<JComponent> requestDisplay(boolean activate) {
+    public CompletableFuture<JComponent> reveal(boolean activate) {
         if (!activate || !component.isRequestFocusEnabled()) {
             return CompletableFuture.completedFuture(component);
         }

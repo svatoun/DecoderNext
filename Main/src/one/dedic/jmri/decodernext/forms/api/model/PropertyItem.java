@@ -5,12 +5,9 @@
  */
 package one.dedic.jmri.decodernext.forms.api.model;
 
-import one.dedic.jmri.decodernext.jgoodies.PropertyValueAdapter;
 import com.jgoodies.binding.beans.PropertyAdapter;
+import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.validation.Validator;
-import one.dedic.jmri.decodernext.model.formx.model.DataItem;
-import one.dedic.jmri.decodernext.model.formx.model.EntryDescriptor;
-import one.dedic.jmri.decodernext.model.formx.model.FormValueModel;
 import org.openide.util.Lookup;
 
 /**
@@ -47,12 +44,7 @@ public final class PropertyItem<T> implements DataItem {
     }
 
     @Override
-    public FormValueModel getModel() {
+    public ValueModel getModel() {
         return adapter;
-    }
-
-    @Override
-    public String id() {
-        return descriptor.getId();
     }
 }

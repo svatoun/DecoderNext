@@ -5,7 +5,6 @@
  */
 package one.dedic.jmri.decodernext.forms.api.model;
 
-import one.dedic.jmri.decodernext.model.formx.model.*;
 import java.beans.FeatureDescriptor;
 
 /**
@@ -13,15 +12,6 @@ import java.beans.FeatureDescriptor;
  * @author sdedic
  */
 public interface AbstractItem {
-    /**
-     * Uniquely identifies this item. Allows to present one single data
-     * item more than once on the form, while validating the data, rather
-     * than its appearance.
-     * 
-     * @return 
-     */
-    public String id();
-
     /**
      * Describes the item. Name and shortDescription should be filled.
      * @return 

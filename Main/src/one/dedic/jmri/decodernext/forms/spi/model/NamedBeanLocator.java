@@ -5,13 +5,12 @@
  */
 package one.dedic.jmri.decodernext.forms.spi.model;
 
-import one.dedic.jmri.decodernext.forms.api.input.DefaultInputContext;
-
+import one.dedic.jmri.decodernext.forms.api.input.InputContext;
 
 /**
  * Allows 
  * @author sdedic
  */
 public interface NamedBeanLocator {
-    public Object findNamedBean(DefaultInputContext ctx);
+    public Object findNamedBean(String beanId, InputContext ctx);
 }
